@@ -1,0 +1,42 @@
+#!/usr/bin/env superdoit_solo
+options
+{
+}
+%
+usage
+-----
+USAGE $basename [--help | -h] [--debug | -D] [--debugGem] <package-ston-path>
+
+DESCRIPTION
+  <put your description here>
+
+OPTIONS
+  -h, --help      display usage message
+  -D, --debug     bring up topaz debugger in the event of a script error
+  --debugGem      If terminal is connected to stdout, bring up debugger. If not,
+                  dump stack to stdout and wait for topaz to attach using topaz
+                  DEBUGGEM command.
+
+EXAMPLES
+  $basename --help
+  $basename -D
+  $basename --debugGem
+  $basename loadedPackages.ston
+-----
+%
+doit
+	| projectMap |
+	(self positionalArgs first) asFileReference readStreamDo: [:stream |
+		projectMap := STON fromStream: stream ].
+	projectMap keysAndValuesDo: [:projectName :packagesArray |
+		self stdout 
+			nextPutAll: projectName;
+			lf;
+			yourself.
+		packagesArray
+			do: [:assoc |
+				self stdout
+					tab;
+					nextPutAll: assoc key; tab; tab; nextPutAll: assoc value; lf ] ].
+	^true
+%

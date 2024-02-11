@@ -1,0 +1,50 @@
+#!/usr/bin/env superdoit_topaz
+#
+# simply execute a topaz script: 
+#		- using current $GEMSTONE and .topazini supplied on command line
+#				simple.topaz -I ./.topazini -L
+#		- using current $GS_HOME, stone name and topaz args supplied on command line
+#				simple.topaz gs_361 -L
+
+set u DataCurator p swordfish
+login
+
+run
+	| topez result repositoryMap packageList skippedPackages |
+   topez := (TDTopezServer for: 1000)
+     displayOops: false;
+     characterLimit: 160;
+     listLimit: 120;
+     topezClientForwarder: TDTestClientForwarder new;
+     yourself.
+
+	packageList := topez evaluateCommandStream: 'mc list' readStream.
+	repositoryMap := Dictionary new.
+	skippedPackages := Set new.
+
+	packageList do: [:mcWorkingCopy |
+		| packageName packageVersion ancestryInfo |
+		GsFile gciLogServer: mcWorkingCopy printString.
+		packageName := mcWorkingCopy packageName.
+		packageVersion := mcWorkingCopy printString.
+		ancestryInfo := mcWorkingCopy ancestry ancestorString.
+    ((mcWorkingCopy repositoryGroup repositories 
+			select: [:each | 
+				each class = MCFileTreeRepository]) detect: [:repo | 
+					(repo versionWithInfo: mcWorkingCopy currentVersionInfo) notNil ]
+						ifNone: [])
+							ifNil: [ 
+								skippedPackages add: packageName.
+								GsFile stdout tab; nextPutAll: 'skipping package ', packageName printString, ' no file tree repo.'; lf. ]
+							ifNotNil: [:repo |
+								(repositoryMap 
+									at: repo directory pathName
+									ifAbsentPut: [Set new ]) add: ancestryInfo ] ].
+	'loadedPackages.ston' asFileReference 
+		writeStreamDo: [:stream |
+			stream truncate.
+	  	STON 
+				put: { skippedPackages . repositoryMap }
+				onStream: stream ].
+%
+

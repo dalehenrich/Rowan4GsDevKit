@@ -1,0 +1,66 @@
+#!/usr/bin/env superdoit_rowan3_solo
+options
+{
+SuperDoitOptionalOptionWithRequiredArg long: 'projectName' default: 'tode_rowan3'.
+SuperDoitOptionalOptionWithRequiredArg long: 'componentName' default: 'Core'.
+SuperDoitOptionalOptionWithRequiredArg long: 'packageFormat' default: 'filetree'.
+SuperDoitOptionalOptionWithRequiredArg long: 'packageConvention' default: 'Monticello'.
+SuperDoitOptionalOptionWithRequiredArg long: 'projectsHome' default: 'projectsHome'.
+SuperDoitOptionalOptionWithRequiredArg long: 'repositoryType' default: 'git'.
+SuperDoitOptionalOptionWithRequiredArg long: 'defaultSymbolDictName' default: 'UserGlobals'.
+}
+%
+usage
+-----
+USAGE $basename [--help | -h] [--debug | -D] [--debugGem] <package-ston-path>
+
+DESCRIPTION
+  <put your description here>
+
+OPTIONS
+  -h, --help      display usage message
+  -D, --debug     bring up topaz debugger in the event of a script error
+  --debugGem      If terminal is connected to stdout, bring up debugger. If not,
+                  dump stack to stdout and wait for topaz to attach using topaz
+                  DEBUGGEM command.
+
+EXAMPLES
+  $basename --help
+  $basename -D
+  $basename --debugGem
+  $basename loadedPackages.ston
+-----
+%
+instvars
+repositoryMap
+skippedPackages
+%
+method
+readMapFileFrom: stonFilePath
+	| ar |
+	stonFilePath asFileReference readStreamDo: [:stream |
+	ar := STON fromStream: stream ].
+	skippedPackages := (ar at: 1) asArray.
+	repositoryMap := ar at: 2. "key is path to package directory; value is Set of packageNames"
+%
+doit
+	| definedProject |
+	self readMapFileFrom: self positionalArgs first.
+	definedProject := (Rowan newProjectNamed: self projectName).
+	definedProject
+		addLoadComponentNamed: self componentName;
+		packageConvention: self packageConvention;
+		gemstoneSetDefaultSymbolDictNameTo: self defaultSymbolDictName;
+		repoType: self repositoryType asSymbol;	
+		packageFormat: self packageFormat;
+		projectsHome: self projectsHome;
+		yourself.
+	repositoryMap keysAndValuesDo: [ :packageDirPath :packageNames |
+		packageNames
+			do: [:packageName |
+				definedProject 
+					addPackageNamed: packageName toComponentNamed:self componentName ] ].
+	(self projectsHome asFileReference / self projectName / 'rowan') ensureDeleteAll.
+	definedProject resolveProject write.
+	^ self noResult
+%
