@@ -5,6 +5,7 @@
 set -e
 if [ "$1"x = "x" ]; then
 	echo "expect name of stone to be first argument of script"
+fi
 stoneName=$1
 
 newExtent.solo -r tode $stoneName -e product/bin/extent0.seaside.dbf

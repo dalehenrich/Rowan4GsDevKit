@@ -36,6 +36,12 @@ repositoryMap
 skippedPackages
 %
 method
+symbolicLink: targetFileReference to: linkFileReference
+	| commandLine |
+	commandLine := '/bin/ln -s ' , targetFileReference fullName, ' ' , linkFileReference fullName.
+	Rowan gitTools performOnServer: commandLine logging: false.
+%
+method
 readMapFileFrom: stonFilePath
 	| ar |
 	stonFilePath asFileReference readStreamDo: [:stream |
@@ -44,7 +50,7 @@ readMapFileFrom: stonFilePath
 	repositoryMap := ar at: 2. "key is path to package directory; value is Set of packageNames"
 %
 doit
-	| definedProject |
+	| definedProject resolvedProject packagesRoot |
 	self readMapFileFrom: self positionalArgs first.
 	definedProject := (Rowan newProjectNamed: self projectName).
 	definedProject
@@ -61,6 +67,15 @@ doit
 				definedProject 
 					addPackageNamed: packageName toComponentNamed:self componentName ] ].
 	(self projectsHome asFileReference / self projectName / 'rowan') ensureDeleteAll.
-	definedProject resolveProject write.
+	resolvedProject := definedProject resolveProject.
+	resolvedProject write.
+	packagesRoot := resolvedProject packagesRoot.
+	packagesRoot deleteAllChildren.
+	repositoryMap keysAndValuesDo: [ :packageDirPath :packageNames |
+		| targetPackagesRoot |
+		targetPackagesRoot := packageDirPath asFileReference.
+		packageNames
+			do: [:packageName |
+				self symbolicLink: targetPackagesRoot / packageName, 'package'  to: packagesRoot / packageName, 'package' ] ].
 	^ self noResult
 %

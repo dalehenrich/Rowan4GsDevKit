@@ -23,11 +23,13 @@ run
 	skippedPackages := Set new.
 
 	packageList do: [:mcWorkingCopy |
-		| packageName packageVersion ancestryInfo |
+		| packageName |
 		GsFile gciLogServer: mcWorkingCopy printString.
-		packageName := mcWorkingCopy packageName.
-		packageVersion := mcWorkingCopy printString.
-		ancestryInfo := mcWorkingCopy ancestry ancestorString.
+		packageName := mcWorkingCopy ancestry ancestorString.
+		packageName last isDigit
+			ifTrue: [
+				 "strip version info and get basename ... see nextVersionName" 
+				packageName := packageName copyUpToLast: $- ].
     ((mcWorkingCopy repositoryGroup repositories 
 			select: [:each | 
 				each class = MCFileTreeRepository]) detect: [:repo | 
@@ -39,7 +41,7 @@ run
 							ifNotNil: [:repo |
 								(repositoryMap 
 									at: repo directory pathName
-									ifAbsentPut: [Set new ]) add: ancestryInfo ] ].
+									ifAbsentPut: [Set new ]) add: packageName ] ].
 	'loadedPackages.ston' asFileReference 
 		writeStreamDo: [:stream |
 			stream truncate.
