@@ -66,16 +66,18 @@ doit
 			do: [:packageName |
 				definedProject 
 					addPackageNamed: packageName toComponentNamed:self componentName ] ].
-	(self projectsHome asFileReference / self projectName / 'rowan') ensureDeleteAll.
+	(self projectsHome asFileReference / self projectName) ensureDeleteAll.
 	resolvedProject := definedProject resolveProject.
 	resolvedProject write.
 	packagesRoot := resolvedProject packagesRoot.
-	packagesRoot deleteAllChildren.
 	repositoryMap keysAndValuesDo: [ :packageDirPath :packageNames |
 		| targetPackagesRoot |
 		targetPackagesRoot := packageDirPath asFileReference.
 		packageNames
 			do: [:packageName |
-				self symbolicLink: targetPackagesRoot / packageName, 'package'  to: packagesRoot / packageName, 'package' ] ].
+				| packageDir |
+				packageDir := packagesRoot / packageName, 'package'.
+				packageDir ensureDeleteAll.
+				self symbolicLink: targetPackagesRoot / packageName, 'package'  to: packageDir ] ].
 	^ self noResult
 %
