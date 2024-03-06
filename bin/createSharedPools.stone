@@ -73,6 +73,88 @@ sharedPoolKeys
 		"ZipFileConstants"
 		#( CentralDirectoryFileHeaderSignature CompressionDeflated CompressionLevelDefault CompressionLevelNone CompressionStored DataDescriptorLength DefaultDirectoryPermissions DefaultFilePermissions DeflatingCompressionFast DeflatingCompressionMaximum DeflatingCompressionNormal DeflatingCompressionSuperFast DirectoryAttrib EndOfCentralDirectorySignature FaMsdos FaUnix FileAttrib IfaBinaryFile IfaTextFile LocalFileHeaderSignature)
 %
+method
+createNeededClassesAndGlobals
+	"create classes that are in skipped packages or mcz files ... another class is subclassing them"
+	STONWriter subclass: 'STON091Writer'
+		instVarNames: #()
+		classVars: #()
+		classInstVars: #()
+		poolDictionaries: #()
+		inDictionary: UserGlobals.
+	STONReader subclass: 'STON091Reader'
+		instVarNames: #( encounteredHexCharacter)
+		classVars: #()
+		classInstVars: #()
+		poolDictionaries: #()
+		inDictionary: UserGlobals.
+	(self globalNamed: 'STON091Reader') subclass: 'STON091ExternalReader'
+		instVarNames: #( topez)
+		classVars: #()
+		classInstVars: #()
+		poolDictionaries: #()
+		inDictionary: UserGlobals.
+	Object subclass: 'MCStWriter'
+		instVarNames: #( initStream stream)
+		classVars: #()
+		classInstVars: #()
+		poolDictionaries: #()
+		inDictionary: UserGlobals.
+	Object subclass: 'BaselineOf'
+		instVarNames: #( )
+		classVars: #()
+		classInstVars: #()
+		poolDictionaries: #()
+		inDictionary: UserGlobals.
+	Object subclass: 'SocketStream'
+		instVarNames: #( recentlyRead socket inBuffer
+	                  outBuffer inNextToWrite outNextToWrite lastRead
+	                  timeout autoFlush bufferSize binary
+	                  shouldSignal )
+		classVars: #()
+		classInstVars: #()
+		poolDictionaries: #()
+		inDictionary: UserGlobals.
+	TestCase subclass: 'MCTestCase'
+		instVarNames: #(  saveAutoMigrate monticelloPackageModified )
+		classVars: #()
+		classInstVars: #()
+		poolDictionaries: #()
+		inDictionary: UserGlobals.
+	Object subclass: 'MetacelloPlatform'
+		instVarNames: #( bypassProgressBars bypassGoferLoadUpdateCategories )
+		classVars: #()
+		classInstVars: #()
+		poolDictionaries: #()
+		inDictionary: UserGlobals.
+	Object subclass: 'MCFileTreeStCypressWriter'
+		instVarNames: #( fileStream classDefinitions methodDefinitions stWriter initializers orderedClassNames)
+		classVars: #()
+		classInstVars: #()
+		poolDictionaries: #()
+		inDictionary: UserGlobals.
+	TestCase subclass: 'GsSqueakCommonTests'
+		instVarNames: #()
+		classVars: #()
+		classInstVars: #()
+		poolDictionaries: #()
+		inDictionary: UserGlobals.
+
+	"satisfy class/global refs in methods"
+	#( 
+			MCWorkingCopy Smalltalk RxParser MCRepositoryGroup MCCacheRepository MCDefinition MCMethodDefinition 
+			ConnectionClosed Metacello GoferResolvedReference Gofer MCWorkingAncestry GoferVersionReference MCPlatformSupport 
+			MCVersion MetacelloProjectRegistration MCPerformPostloadNotification MetacelloToolBox MetacelloMCProject
+			MCThreeWayMerger MCVersionNameAndMessageRequest MCPackage SetOrClearBreakpointAnnouncement ClearAllBreakpointsAnnouncement
+			MCGitHubRepository MetacelloScriptEngine MCSnapshot MCHttpRepository MCFileBasedRepository ZnClient UndefinedSymbols 
+			MCAddition MCModification MCPackageLoader MCDependencySorter NameMatch STON051Reader STON051Writer MetacelloMCBaselineOfProjectSpec
+			MetacelloMCBaselineProject MetacelloSkipDirtyPackageLoad MetacelloIgnorePackageLoaded MetacelloSkipDirtyPackageLoad MetacelloMCConfigurationOfProjectSpec
+			Url ConnectionTimedOut UUIDGenerator MCClassDefinition MCVersionInfo MCDictionaryRepository ZipArchive SecureHashAlgorithm
+			MetacelloVersionNumber 
+	)
+		do: [:global |
+			UserGlobals at: global put: nil ].
+%
 doit
 	| aSymbolDict |
 	aSymbolDict := SymbolDictionary new
@@ -82,5 +164,6 @@ doit
 		insertDictionary: aSymbolDict at: 1.
 	self sharedPoolKeys
 		do: [:sym | aSymbolDict at: sym put: nil].
+	self createNeededClassesAndGlobals.
 	^ System commitTransaction
 %
