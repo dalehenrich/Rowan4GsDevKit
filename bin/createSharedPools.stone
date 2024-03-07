@@ -75,7 +75,7 @@ sharedPoolKeys
 %
 method
 createNeededClassesAndGlobals
-	"create classes that are in skipped packages or mcz files ... another class is subclassing them"
+	"create classes that are in skipped packages or mcz files ... another class is subclassing them or extension methods are being added"
 	STONWriter subclass: 'STON091Writer'
 		instVarNames: #()
 		classVars: #()
@@ -139,18 +139,85 @@ createNeededClassesAndGlobals
 		classInstVars: #()
 		poolDictionaries: #()
 		inDictionary: UserGlobals.
+	Object subclass: 'MCFileTreeFileUtils'
+		instVarNames: #( )
+		classVars: #( Current )
+		classInstVars: #()
+		poolDictionaries: #()
+		inDictionary: UserGlobals.
+	(self globalNamed: 'MCFileTreeFileUtils') subclass: 'MCFileTreeFileDirectoryUtils'
+		instVarNames: #( )
+		classVars: #( )
+		classInstVars: #()
+		poolDictionaries: #()
+		inDictionary: UserGlobals.
+	Object subclass: 'MCDefinition'
+		instVarNames: #( )
+		classVars: #( Instances )
+		classInstVars: #()
+		poolDictionaries: #()
+		inDictionary: UserGlobals.
+	(self globalNamed: 'MCDefinition') subclass: 'MCClassDefinition'
+		instVarNames: #( name superclassName variables
+	                  category type comment commentStamp
+	                  traitComposition classTraitComposition)
+		classVars: #( )
+		classInstVars: #()
+		poolDictionaries: #()
+		inDictionary: UserGlobals.
+	(self globalNamed: 'MCDefinition') subclass: 'MCClassDefinition'
+		instVarNames: #( name superclassName variables
+	                  category type comment commentStamp
+	                  traitComposition classTraitComposition)
+		classVars: #(Definitions UseTimeStampInComparisons)
+		classInstVars: #()
+		poolDictionaries: #()
+		inDictionary: UserGlobals.
+	(self globalNamed: 'MCDefinition') subclass: 'MCMethodDefinition'
+		instVarNames: #( classIsMeta source category
+	                  selector className timeStamp)
+		classVars: #(Definitions UseTimeStampInComparisons)
+		classInstVars: #()
+		poolDictionaries: #()
+		inDictionary: UserGlobals.
+	Object subclass: 'Url'
+		instVarNames: #( fragment )
+		classVars: #(  )
+		classInstVars: #()
+		poolDictionaries: #()
+		inDictionary: UserGlobals.
+	(self globalNamed: 'Url') subclass: 'HierarchicalUrl'
+		instVarNames: #( schemeName authority path
+	                  query port username password)
+		classVars: #( )
+		classInstVars: #()
+		poolDictionaries: #()
+		inDictionary: UserGlobals.
+	Object subclass: 'MCPackageManager'
+		instVarNames: #( package modified )
+		classVars: #(  )
+		classInstVars: #(registry)
+		poolDictionaries: #()
+		inDictionary: UserGlobals.
+	(self globalNamed: 'MCPackageManager') subclass: 'MCWorkingCopy'
+		instVarNames: #( versionInfo ancestry counter
+	                  repositoryGroup requiredPackages)
+		classVars: #( )
+		classInstVars: #()
+		poolDictionaries: #()
+		inDictionary: UserGlobals.
 
 	"satisfy class/global refs in methods"
 	#( 
-			MCWorkingCopy Smalltalk RxParser MCRepositoryGroup MCCacheRepository MCDefinition MCMethodDefinition 
+			Smalltalk RxParser MCRepositoryGroup MCCacheRepository 
 			ConnectionClosed Metacello GoferResolvedReference Gofer MCWorkingAncestry GoferVersionReference MCPlatformSupport 
 			MCVersion MetacelloProjectRegistration MCPerformPostloadNotification MetacelloToolBox MetacelloMCProject
 			MCThreeWayMerger MCVersionNameAndMessageRequest MCPackage SetOrClearBreakpointAnnouncement ClearAllBreakpointsAnnouncement
 			MCGitHubRepository MetacelloScriptEngine MCSnapshot MCHttpRepository MCFileBasedRepository ZnClient UndefinedSymbols 
 			MCAddition MCModification MCPackageLoader MCDependencySorter NameMatch STON051Reader STON051Writer MetacelloMCBaselineOfProjectSpec
 			MetacelloMCBaselineProject MetacelloSkipDirtyPackageLoad MetacelloIgnorePackageLoaded MetacelloSkipDirtyPackageLoad MetacelloMCConfigurationOfProjectSpec
-			Url ConnectionTimedOut UUIDGenerator MCClassDefinition MCVersionInfo MCDictionaryRepository ZipArchive SecureHashAlgorithm
-			MetacelloVersionNumber 
+			ConnectionTimedOut UUIDGenerator MCVersionInfo MCDictionaryRepository ZipArchive SecureHashAlgorithm
+			MetacelloVersionNumber SocketStreamSocket 
 	)
 		do: [:global |
 			UserGlobals at: global put: nil ].
