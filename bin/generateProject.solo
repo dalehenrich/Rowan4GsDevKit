@@ -7,7 +7,7 @@ SuperDoitOptionalOptionWithRequiredArg long: 'packageFormat' default: 'filetree'
 SuperDoitOptionalOptionWithRequiredArg long: 'packageConvention' default: 'Monticello'.
 SuperDoitOptionalOptionWithRequiredArg long: 'projectsHome' default: 'projectsHome'.
 SuperDoitOptionalOptionWithRequiredArg long: 'repositoryType' default: 'git'.
-SuperDoitOptionalOptionWithRequiredArg long: 'defaultSymbolDictName' default: 'UserGlobals'.
+SuperDoitOptionalOptionWithRequiredArg long: 'defaultSymbolDictName' default: 'Globals'.
 }
 %
 usage

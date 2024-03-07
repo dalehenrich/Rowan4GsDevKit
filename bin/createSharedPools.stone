@@ -76,36 +76,40 @@ sharedPoolKeys
 method
 createNeededClassesAndGlobals
 	"create classes that are in skipped packages or mcz files ... another class is subclassing them or extension methods are being added"
+	| defaultSymbolDictionary cls |
+	defaultSymbolDictionary := Globals.
 	STONWriter subclass: 'STON091Writer'
 		instVarNames: #()
 		classVars: #()
 		classInstVars: #()
 		poolDictionaries: #()
-		inDictionary: UserGlobals.
-	STONReader subclass: 'STON091Reader'
+		inDictionary: defaultSymbolDictionary.
+	cls := STONReader subclass: 'STON091Reader'
 		instVarNames: #( encounteredHexCharacter)
 		classVars: #()
 		classInstVars: #()
 		poolDictionaries: #()
-		inDictionary: UserGlobals.
-	(self globalNamed: 'STON091Reader') subclass: 'STON091ExternalReader'
+		inDictionary: defaultSymbolDictionary.
+	cls category: 'Topez-Server-Core'.
+	cls := (self globalNamed: 'STON091Reader') subclass: 'STON091ExternalReader'
 		instVarNames: #( topez)
 		classVars: #()
 		classInstVars: #()
 		poolDictionaries: #()
-		inDictionary: UserGlobals.
+		inDictionary: defaultSymbolDictionary.
+	cls category: 'Topez-Server-Core'.
 	Object subclass: 'MCStWriter'
 		instVarNames: #( initStream stream)
 		classVars: #()
 		classInstVars: #()
 		poolDictionaries: #()
-		inDictionary: UserGlobals.
+		inDictionary: defaultSymbolDictionary.
 	Object subclass: 'BaselineOf'
 		instVarNames: #( )
 		classVars: #()
 		classInstVars: #()
 		poolDictionaries: #()
-		inDictionary: UserGlobals.
+		inDictionary: defaultSymbolDictionary.
 	Object subclass: 'SocketStream'
 		instVarNames: #( recentlyRead socket inBuffer
 	                  outBuffer inNextToWrite outNextToWrite lastRead
@@ -114,49 +118,49 @@ createNeededClassesAndGlobals
 		classVars: #()
 		classInstVars: #()
 		poolDictionaries: #()
-		inDictionary: UserGlobals.
+		inDictionary: defaultSymbolDictionary.
 	TestCase subclass: 'MCTestCase'
 		instVarNames: #(  saveAutoMigrate monticelloPackageModified )
 		classVars: #()
 		classInstVars: #()
 		poolDictionaries: #()
-		inDictionary: UserGlobals.
+		inDictionary: defaultSymbolDictionary.
 	Object subclass: 'MetacelloPlatform'
 		instVarNames: #( bypassProgressBars bypassGoferLoadUpdateCategories )
 		classVars: #()
 		classInstVars: #()
 		poolDictionaries: #()
-		inDictionary: UserGlobals.
+		inDictionary: defaultSymbolDictionary.
 	Object subclass: 'MCFileTreeStCypressWriter'
 		instVarNames: #( fileStream classDefinitions methodDefinitions stWriter initializers orderedClassNames)
 		classVars: #()
 		classInstVars: #()
 		poolDictionaries: #()
-		inDictionary: UserGlobals.
+		inDictionary: defaultSymbolDictionary.
 	TestCase subclass: 'GsSqueakCommonTests'
 		instVarNames: #()
 		classVars: #()
 		classInstVars: #()
 		poolDictionaries: #()
-		inDictionary: UserGlobals.
+		inDictionary: defaultSymbolDictionary.
 	Object subclass: 'MCFileTreeFileUtils'
 		instVarNames: #( )
 		classVars: #( Current )
 		classInstVars: #()
 		poolDictionaries: #()
-		inDictionary: UserGlobals.
+		inDictionary: defaultSymbolDictionary.
 	(self globalNamed: 'MCFileTreeFileUtils') subclass: 'MCFileTreeFileDirectoryUtils'
 		instVarNames: #( )
 		classVars: #( )
 		classInstVars: #()
 		poolDictionaries: #()
-		inDictionary: UserGlobals.
+		inDictionary: defaultSymbolDictionary.
 	Object subclass: 'MCDefinition'
 		instVarNames: #( )
 		classVars: #( Instances )
 		classInstVars: #()
 		poolDictionaries: #()
-		inDictionary: UserGlobals.
+		inDictionary: defaultSymbolDictionary.
 	(self globalNamed: 'MCDefinition') subclass: 'MCClassDefinition'
 		instVarNames: #( name superclassName variables
 	                  category type comment commentStamp
@@ -164,7 +168,7 @@ createNeededClassesAndGlobals
 		classVars: #( )
 		classInstVars: #()
 		poolDictionaries: #()
-		inDictionary: UserGlobals.
+		inDictionary: defaultSymbolDictionary.
 	(self globalNamed: 'MCDefinition') subclass: 'MCClassDefinition'
 		instVarNames: #( name superclassName variables
 	                  category type comment commentStamp
@@ -172,40 +176,40 @@ createNeededClassesAndGlobals
 		classVars: #(Definitions UseTimeStampInComparisons)
 		classInstVars: #()
 		poolDictionaries: #()
-		inDictionary: UserGlobals.
+		inDictionary: defaultSymbolDictionary.
 	(self globalNamed: 'MCDefinition') subclass: 'MCMethodDefinition'
 		instVarNames: #( classIsMeta source category
 	                  selector className timeStamp)
 		classVars: #(Definitions UseTimeStampInComparisons)
 		classInstVars: #()
 		poolDictionaries: #()
-		inDictionary: UserGlobals.
+		inDictionary: defaultSymbolDictionary.
 	Object subclass: 'Url'
 		instVarNames: #( fragment )
 		classVars: #(  )
 		classInstVars: #()
 		poolDictionaries: #()
-		inDictionary: UserGlobals.
+		inDictionary: defaultSymbolDictionary.
 	(self globalNamed: 'Url') subclass: 'HierarchicalUrl'
 		instVarNames: #( schemeName authority path
 	                  query port username password)
 		classVars: #( )
 		classInstVars: #()
 		poolDictionaries: #()
-		inDictionary: UserGlobals.
+		inDictionary: defaultSymbolDictionary.
 	Object subclass: 'MCPackageManager'
 		instVarNames: #( package modified )
 		classVars: #(  )
 		classInstVars: #(registry)
 		poolDictionaries: #()
-		inDictionary: UserGlobals.
+		inDictionary: defaultSymbolDictionary.
 	(self globalNamed: 'MCPackageManager') subclass: 'MCWorkingCopy'
 		instVarNames: #( versionInfo ancestry counter
 	                  repositoryGroup requiredPackages)
 		classVars: #( )
 		classInstVars: #()
 		poolDictionaries: #()
-		inDictionary: UserGlobals.
+		inDictionary: defaultSymbolDictionary.
 
 	"satisfy class/global refs in methods"
 	#( 
@@ -222,6 +226,14 @@ createNeededClassesAndGlobals
 		do: [:global |
 			UserGlobals at: global put: nil ].
 %
+method
+shareAssociationsInGlobals
+	"add associations to Globals to bypass Rowan symbol dictionary package affinity errors "
+	({GsInteraction . STONWriter} , GsInteraction allSubclasses) do: [:class |
+		| assoc |
+		assoc := RowanKernel associationAt: class name.
+		Globals addAssociation: assoc ]
+%
 doit
 	| aSymbolDict |
 	aSymbolDict := SymbolDictionary new
@@ -232,5 +244,6 @@ doit
 	self sharedPoolKeys
 		do: [:sym | aSymbolDict at: sym put: nil].
 	self createNeededClassesAndGlobals.
+	self shareAssociationsInGlobals.
 	^ System commitTransaction
 %
