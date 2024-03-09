@@ -3,6 +3,7 @@ options
 {
 SuperDoitOptionalOptionWithRequiredArg long: 'projectName' default: 'tode_rowan3'.
 SuperDoitOptionalOptionWithRequiredArg long: 'componentName' default: 'Core'.
+SuperDoitOptionalOptionWithRequiredArg long: 'skippedComponentName' default: 'Skip'.
 SuperDoitOptionalOptionWithRequiredArg long: 'packageFormat' default: 'filetree'.
 SuperDoitOptionalOptionWithRequiredArg long: 'packageConvention' default: 'Monticello'.
 SuperDoitOptionalOptionWithRequiredArg long: 'projectsHome' default: 'projectsHome'.
@@ -49,23 +50,65 @@ readMapFileFrom: stonFilePath
 	skippedPackages := (ar at: 1) asArray.
 	repositoryMap := ar at: 2. "key is path to package directory; value is Set of packageNames"
 %
+method
+skippedPackageNames
+	"These packages will NOT be loaded into the Rowan 3 stone. Some of them conflict
+		with packages that are present in a Rowan 3 stone and some of them are excluded
+    because they depend upon classes in .mcz files, since Rowan 3 currently cannot
+		load .mcz files"
+	^ {
+		'Announcements.v3'.
+		'AST-Core'.
+		'BaselineOfMetacello'.
+		'BaselineOfRB'.
+		'GemStone-Interactions'.
+		'Metacello-Base'.
+		'Metacello-Bitbucket'.
+		'Metacello-Core'.
+		'Metacello-Cypress'.
+		'Metacello-GitBasedRepository'.
+		'Metacello-GitHub'.
+		'Metacello-MC'.
+		'Metacello-Platform.gemstone'.
+		'Metacello-ToolBox'.
+		'Monticello.v36'.
+		'OB-GemStone-Platform'.
+		'OB-Monticello'.
+		'OB-Standard.v3'.
+		'OB-Tools.v37'.
+		'STON-Core'.
+		'STON-GemStone-Core'.
+		'STON-UTF8-Core'.
+		'Tode-AST-Extensions'.
+	}
+%
 doit
-	| definedProject resolvedProject packagesRoot |
+	| definedProject resolvedProject packagesRoot skippedPackageNames |
 	self readMapFileFrom: self positionalArgs first.
 	definedProject := (Rowan newProjectNamed: self projectName).
 	definedProject
-		addLoadComponentNamed: self componentName;
+		addLoadComponentNamed: self componentName comment: 'Packages that will be loaded into the Rowan3 stone';
+		addLoadComponentNamed: self skippedComponentName comment: 'Packages that will NOT be loaded into the Rowan3 stone';
 		packageConvention: self packageConvention;
 		gemstoneSetDefaultSymbolDictNameTo: self defaultSymbolDictName;
 		repoType: self repositoryType asSymbol;	
 		packageFormat: self packageFormat;
 		projectsHome: self projectsHome;
 		yourself.
+	"skippedPackageNames are added to the Skipped component, and the skipped component
+		is not loaded ..."
+	skippedPackageNames := self skippedPackageNames.
 	repositoryMap keysAndValuesDo: [ :packageDirPath :packageNames |
 		packageNames
 			do: [:packageName |
-				definedProject 
-					addPackageNamed: packageName toComponentNamed:self componentName ] ].
+				(skippedPackageNames includes: packageName)
+					ifTrue: [ 
+						definedProject 
+							addPackageNamed: packageName toComponentNamed:self skippedComponentName ]
+					ifFalse: [ 
+						definedProject 
+							addPackageNamed: packageName toComponentNamed: self componentName ] ] ].
+	definedProject componentNames: { self componentName }. "only load componentName"
 	(self projectsHome asFileReference / self projectName) ensureDeleteAll.
 	resolvedProject := definedProject resolveProject.
 	resolvedProject write.

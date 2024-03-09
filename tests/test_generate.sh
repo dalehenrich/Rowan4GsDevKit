@@ -1,11 +1,6 @@
 #! /usr/bin/env bash
 #
-# test coverage for setting up a rowan v3 alpha dev environment
-#		registryReport.sol
-#		createRegistry.solo
-#		createProjectSet.solo
-#		updateProjectSet.solo
-#		cloneProjectsFromProjectSet.solo
+# sample script for setting up a Rowan4GsDevKit dev environment
 #		
 set -xe
 
@@ -45,6 +40,10 @@ fi
 
 createProjectSet.solo --registry=$registry --projectSet=$projectSet \
   --from=$GSDEVKIT_STONES_ROOT/projectSets/$urlType/devkit.ston $*
+# clone Rowan:issue_917 ... needed to do load
+updateProjectSet.solo --registry=$registry --projectSet=$projectSet \
+	--projectName=Rowan --gitUrl=git@github.com:GemTalk/Rowan.git \
+	--revision=issue_917 $*
 
 registerProjectDirectory.solo --registry=$registry --projectDirectory=$STONES_HOME/$registry/devkit $*
 
@@ -62,8 +61,9 @@ else
 fi
 registerProductDirectory.solo --registry=$registry --productDirectory=$STONES_HOME/test_gemstone $*
 
-# download $GS_VERS
-downloadGemStone.solo --registry=$registry 3.7.0 $GS_VERS $*
+# enable download when 3.7.1 ships
+# downloadGemStone.solo --registry=$registry 3.7.1 $GS_VERS $*
+
 # update product list from shared product directory when a download is done by shared registry
 registerProduct.solo --registry=$registry --fromDirectory=$STONES_HOME/test_gemstone $*
 
@@ -85,7 +85,7 @@ fi
 
 registerTodeSharedDir.solo --registry=$registry \
                            --todeHome=$todeHome \
-                           --populate
+                           --populate $*
 
 
 # create a $GS_VERS stone
@@ -97,7 +97,7 @@ template="default_tode"
 createStone.solo --registry=$registry --template=$template $todeStoneName $GS_VERS $*
 
 # create Rowan 3 stone
-template="default_rowan3.ston"
+template="default_rowan3"
 createStone.solo --registry=$registry --template=$template $rowan3StoneName $GS_VERS $*
 
 #start stones
@@ -106,7 +106,9 @@ startStone.solo --registry=$registry $rowan3StoneName -b $*
 
 gslist.solo -lc
 
+#
 # install tODE
+#
 cd $STONES_HOME/$registry/stones/$todeStoneName
 export projectsHome=$STONES_HOME/$registry/stones/$todeStoneName/projectsHome
 loadTode.stone --projectDirectory=$STONES_HOME/$registry/devkit $*
@@ -116,20 +118,34 @@ todeIt.stone 'eval `3+4`' $*
 
 # generate the Rowan 3 project in the tODE stone directory
 scriptDir=`dirname "$0"`
-export PATH=scriptDir/../bin:$PATH
+export PATH=$scriptDir/../bin:$PATH
 generatePackageList.topaz -lq
-repositorySummary.solo loadedPackages.ston
-generateProject.solo loadedPackages.ston --projectName=tode_rowan3 --componentName=Core
+repositorySummary.solo loadedPackages.ston $*
 
+# generateProject.solo needs to run with a rowan3 extent from 3.7.1
+OLD_PATH=$PATH
+export GEMSTONE=`registryQuery.solo -r $registry --product=3.7.1`
+export PATH=$GEMSTONE/bin:$PATH
+generateProject.solo loadedPackages.ston --projectName=tode_rowan3 --componentName=Core $*
 
+# revert to original path
+export PATH=$OLD_PATH
+unset GEMSTONE
+
+#
 # install GsDevKit packages in Rowan 3 stone directory
+#
 cd $STONES_HOME/$registry/stones/$rowan3StoneName
 ln -s $projectsHome .
 
+# until 3.7.2 ships, we need to use Rowan:issue_917 when doing the GsDevKit install
+devKitHome=`registryQuery.solo -r $registry --projectDirectory`
+installProject.stone file:$scriptDir/../specs/Rowan.ston --projectsHome=devKitHome --ignoreInvalidCategories --trace  $*
+
 prepareSeasideExtent.topaz -lq
-createSharedPools.stone
-snapshot.stone snapshots --extension="prepared_rowan3.dbf"
+createSharedPools.stone $*
+snapshot.stone snapshots --extension="prepared_rowan3.dbf" $*
 
-installProject.stone file:projectsHome/tode_rowan3/rowan/specs/tode_rowan3.ston --projectsHome=projectsHome --ignoreInvalidCategories --trace -D
+installProject.stone file:projectsHome/tode_rowan3/rowan/specs/tode_rowan3.ston --projectsHome=projectsHome --ignoreInvalidCategories --trace  $*
 
-snapshot.stone snapshots --extension="gsdevkit_rowan3.dbf"
+snapshot.stone snapshots --extension="tode_rowan3.dbf" $*

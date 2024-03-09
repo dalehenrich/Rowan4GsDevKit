@@ -1,0 +1,34 @@
+RwLoadSpecificationV2 {
+	#specName : 'Rowan',
+	#projectName : 'Rowan',
+	#gitUrl : 'git@github.com:GemTalk/Rowan.git',
+	#revision : 'issue_917',
+	#projectSpecFile : 'rowan/project.ston',
+	#componentNames : [
+		'Rowan'
+	],
+	#groupNames : [ ],
+	#customConditionalAttributes : [
+		'stubs',
+		'tonel',
+		'obsolete',
+		'v2',
+		'v2Only',
+		'examples',
+		'shared',
+		'v3'
+	],
+	#platformProperties : {
+		'gemstone' : {
+			'allusers' : {
+				#defaultUseSessionMethodsForExtensions : false,
+				#defaultSymbolDictName : 'UserGlobals'
+			},
+			'SystemUser' : {
+				#defaultUseSessionMethodsForExtensions : false,
+				#defaultSymbolDictName : 'RowanKernel'
+			}
+		}
+	},
+	#comment : 'Load spec for loading Rowan v3:issue_917 in support of Rowan4GsDevKit'
+}

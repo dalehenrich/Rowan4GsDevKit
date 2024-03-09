@@ -1,0 +1,22 @@
+#!/usr/bin/env superdoit_topaz
+#
+# GLASS is not yet ready for Portable streams, nor Legacy streams with ANSI polarity
+# 	Subclasses of ReadStream expect ReadStream to be a Legacy stream
+#
+set u SystemUser p swordfish
+login
+
+run
+
+Stream installLegacyStreamImplementation.
+(Globals at: #'PositionableStream_position') == #'ANSI'
+   ifTrue: [
+     Globals at: #'PositionableStream_position' put: #'Legacy'.
+     PositionableStream compilePositionMethods ].
+true
+%
+expectvalue /Boolean
+send CharacterCollection enableUnicodeComparisonMode
+
+commit
+logout
