@@ -8,6 +8,8 @@ SuperDoitOptionalOptionWithRequiredArg long: 'packageFormat' default: 'filetree'
 SuperDoitOptionalOptionWithRequiredArg long: 'packageConvention' default: 'Monticello'.
 SuperDoitOptionalOptionWithRequiredArg long: 'projectsHome' default: 'projectsHome'.
 SuperDoitOptionalOptionWithRequiredArg long: 'repositoryType' default: 'git'.
+SuperDoitOptionalOptionWithRequiredArg long: 'sportPackageDirPath'.
+SuperDoitOptionalOptionWithRequiredArg long: 'sportPackageName'.
 SuperDoitOptionalOptionWithRequiredArg long: 'defaultSymbolDictName' default: 'Globals'.
 }
 %
@@ -62,20 +64,29 @@ skippedPackageNames
 		'BaselineOfMetacello'.
 		'BaselineOfRB'.
 		'GemStone-Interactions'.
+		'GemStone-Release-Support'.
+		'JadeServer'.
 		'Metacello-Base'.
 		'Metacello-Bitbucket'.
 		'Metacello-Core'.
 		'Metacello-Cypress'.
+		'Metacello-FileTree'.
 		'Metacello-GitBasedRepository'.
 		'Metacello-GitHub'.
+		'Metacello-GS3x-Platform'.
 		'Metacello-MC'.
 		'Metacello-Platform.gemstone'.
 		'Metacello-ToolBox'.
+		'MonticelloGs.v33'.
 		'Monticello.v36'.
 		'OB-GemStone-Platform'.
 		'OB-Monticello'.
 		'OB-Standard.v3'.
+		'OB-SUnitGUI.g'.
+		'OB-SUnitIntegration'.
+		'OB-SymbolListBrowser'.
 		'OB-Tools.v37'.
+		'OmniBrowser'.
 		'STON-Core'.
 		'STON-GemStone-Core'.
 		'STON-UTF8-Core'.
@@ -98,6 +109,10 @@ doit
 	"skippedPackageNames are added to the Skipped component, and the skipped component
 		is not loaded ..."
 	skippedPackageNames := self skippedPackageNames.
+	self sportPackageName
+		ifNotNil: [:packageName |
+			"Sport github project not loaded into tODE image, so we need to slip stream for inclusion here"
+			repositoryMap at: self sportPackageDirPath put: { self sportPackageName } ].
 	repositoryMap keysAndValuesDo: [ :packageDirPath :packageNames |
 		packageNames
 			do: [:packageName |

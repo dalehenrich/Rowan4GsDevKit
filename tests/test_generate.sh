@@ -32,11 +32,20 @@ else
 	export GSDEVKIT_STONES_ROOT=$STONES_HOME/git/GsDevKit_stones
 fi
 
+# create a $GS_VERS stone
+export todeStoneName=tode_$GS_VERS
+export rowan3StoneName=rowan3_$GS_VERS
+scriptDir=`dirname "$0"`
+export projectsHome=$STONES_HOME/$registry/stones/$todeStoneName/projectsHome
+
+# BEGIN SKIPPED SECTION
+skip="true"
+skip="false"
+if [ "$skip" = "false" ]; then
+
 createRegistry.solo $registry --ensure
 
-if [ -d $STONES_HOME/devKit/ ]; then
-	rm -rf  $STONES_HOME/$registry/devKit
-fi
+export devKitProjectDir=devKit
 
 createProjectSet.solo --registry=$registry --projectSet=$projectSet \
   --from=$GSDEVKIT_STONES_ROOT/projectSets/$urlType/devkit.ston $*
@@ -44,8 +53,12 @@ createProjectSet.solo --registry=$registry --projectSet=$projectSet \
 updateProjectSet.solo --registry=$registry --projectSet=$projectSet \
 	--projectName=Rowan --gitUrl=git@github.com:GemTalk/Rowan.git \
 	--revision=issue_917 $*
+# clone Sport:master ... not loaded in tODE, but will be loaded in Rowan extent
+updateProjectSet.solo --registry=$registry --projectSet=$projectSet \
+	--projectName=Sport --gitUrl=git@github.com:GsDevKit/Sport.git \
+	--revision=master $*
 
-registerProjectDirectory.solo --registry=$registry --projectDirectory=$STONES_HOME/$registry/devkit $*
+registerProjectDirectory.solo --registry=$registry --projectDirectory=$STONES_HOME/$registry/$devKitProjectDir $*
 
 # cloneProjectsFromProjectSet.solo will create the project directory if it does not already exist
 cloneProjectsFromProjectSet.solo --registry=$registry --projectSet=$projectSet $*
@@ -88,17 +101,13 @@ registerTodeSharedDir.solo --registry=$registry \
                            --populate $*
 
 
-# create a $GS_VERS stone
-export todeStoneName=tode_$GS_VERS
-export rowan3StoneName=rowan3_$GS_VERS
-
 # create tode stone
 template="default_tode"
-createStone.solo --registry=$registry --template=$template $todeStoneName $GS_VERS $*
+createStone.solo --force --registry=$registry --template=$template $todeStoneName $GS_VERS $*
 
 # create Rowan 3 stone
 template="default_rowan3"
-createStone.solo --registry=$registry --template=$template $rowan3StoneName $GS_VERS $*
+createStone.solo --force --registry=$registry --template=$template $rowan3StoneName $GS_VERS $*
 
 #start stones
 startStone.solo --registry=$registry $todeStoneName -b $*
@@ -110,14 +119,13 @@ gslist.solo -lc
 # install tODE
 #
 cd $STONES_HOME/$registry/stones/$todeStoneName
-export projectsHome=$STONES_HOME/$registry/stones/$todeStoneName/projectsHome
-loadTode.stone --projectDirectory=$STONES_HOME/$registry/devkit $*
+
+loadTode.stone --projectDirectory=$STONES_HOME/$registry/$devKitProjectDir $*
 
 todeIt.stone -h
 todeIt.stone 'eval `3+4`' $*
 
 # generate the Rowan 3 project in the tODE stone directory
-scriptDir=`dirname "$0"`
 export PATH=$scriptDir/../bin:$PATH
 generatePackageList.topaz -lq
 repositorySummary.solo loadedPackages.ston $*
@@ -126,7 +134,9 @@ repositorySummary.solo loadedPackages.ston $*
 OLD_PATH=$PATH
 export GEMSTONE=`registryQuery.solo -r $registry --product=3.7.1`
 export PATH=$GEMSTONE/bin:$PATH
-generateProject.solo loadedPackages.ston --projectName=tode_rowan3 --componentName=Core $*
+generateProject.solo loadedPackages.ston --projectName=tode_rowan3 --componentName=Core \
+	--sportPackageDirPath=$STONES_HOME/$registry/$devKitProjectDir/Sport/src \
+	--sportPackageName=Sport.v3 $*
 
 # revert to original path
 export PATH=$OLD_PATH
@@ -135,6 +145,7 @@ unset GEMSTONE
 #
 # install GsDevKit packages in Rowan 3 stone directory
 #
+
 cd $STONES_HOME/$registry/stones/$rowan3StoneName
 ln -s $projectsHome .
 
@@ -144,8 +155,31 @@ installProject.stone file:$scriptDir/../specs/Rowan.ston --projectsHome=devKitHo
 
 prepareSeasideExtent.topaz -lq
 createSharedPools.stone $*
+
+#
+# end of the non-skip section
+#
+else	# ($skip = true)
+# start of skipped section
+
+cd $STONES_HOME/$registry/stones/$rowan3StoneName
+
+export PATH=$scriptDir/../bin:$PATH
+
+#
+# Copy Rowan 3 extent from snapshot directory
+#
+
+newExtent.solo -r $registry $rowan3StoneName -e snapshots/extent0.prepared_rowan3.dbf  $*
+
+#rerun this script, because it will have changes that we want to apply to the prepared_rowan3.dbf extent
+createSharedPools.stone $*
+
+fi
+# END SKIPPED SECTION
+
 snapshot.stone snapshots --extension="prepared_rowan3.dbf" $*
 
-installProject.stone file:projectsHome/tode_rowan3/rowan/specs/tode_rowan3.ston --projectsHome=projectsHome --ignoreInvalidCategories --trace  $*
+installProject.stone file:projectsHome/tode_rowan3/rowan/specs/tode_rowan3.ston --projectsHome=projectsHome --ignoreInvalidCategories --noAutoInitialize --trace  $*
 
 snapshot.stone snapshots --extension="tode_rowan3.dbf" $*

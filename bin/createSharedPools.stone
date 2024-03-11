@@ -210,6 +210,12 @@ createNeededClassesAndGlobals
 		classInstVars: #()
 		poolDictionaries: #()
 		inDictionary: defaultSymbolDictionary.
+	Object subclass: 'UTF8Encoding'
+		instVarNames: #( )
+		classVars: #(  )
+		classInstVars: #()
+		poolDictionaries: #()
+		inDictionary: defaultSymbolDictionary.
 
 	"satisfy class/global refs in methods"
 	#( 
