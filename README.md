@@ -7,19 +7,4 @@ Expect:
   2. $GEMSTONE/bin to be in PATH.
   3. Rowan4GsDevKit/bin to be in PATH
 
-In a tode stone directory, <stone-name>, run the following scripts to create a tode_rowan3 project that will load be used to load the projects into a Rowan 3 stone for code management:
-
-```
-generatePackageList.topaz -lq
-repositorySummary.solo loadedPackages.ston
-generateProject.solo loadedPackages.ston --projectName=tode_rowan3 --componentName=Core
-```
-In a Rowan 3 stone directory, <stone-name>, run the following script to load the packages generated above into the stone. $projectsHome is a path to directory where the tode_rowan3 project was created: 
-```
-prepareSeasideExtent.topaz -lq
-createSharedPools.stone
-installProject.stone file:$projectsHome/tode_rowan3/rowan/specs/tode_rowan3.ston --projectsHome=$projectsHome --ignoreInvalidCategories -D --trace
-```
-At this point you should be able to use Jadeite to manage the GsDevKit code.
-
-See tests/test_generate.sh for a bash script that can be used as a template for running the above steps using GsDevKit_stones.
+The bash script tests/test_generate.sh contains the full sequence of operations needed to setup for using JadeiteForPharo to develop GsDevKit projects.

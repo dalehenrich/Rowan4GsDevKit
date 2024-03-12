@@ -19,7 +19,8 @@ if [ "$CI" != "true" ]; then
 fi
 
 registry=test_Rowan4GsDevKit
-projectSet=devkit
+rowan3ProjectSet=rowan3
+devKitProjectSet=devkit
 todeHome="$STONES_HOME/$registry/tode"
 
 export urlType=ssh
@@ -36,7 +37,10 @@ fi
 export todeStoneName=tode_$GS_VERS
 export rowan3StoneName=rowan3_$GS_VERS
 scriptDir=`dirname "$0"`
+# projectsHome is where the tode_rowan3 is located
 export projectsHome=$STONES_HOME/$registry/stones/$todeStoneName/projectsHome
+# devKitHome is where the github projects are cloned
+devKitHome=$STONES_HOME/$registry/devKit
 
 # BEGIN SKIPPED SECTION
 skip="true"
@@ -45,26 +49,57 @@ if [ "$skip" = "false" ]; then
 
 createRegistry.solo $registry --ensure
 
-export devKitProjectDir=devKit
-
-createProjectSet.solo --registry=$registry --projectSet=$projectSet \
+createProjectSet.solo --registry=$registry --projectSet=$devKitProjectSet \
   --from=$GSDEVKIT_STONES_ROOT/projectSets/$urlType/devkit.ston $*
-# clone Rowan:issue_917 ... needed to do load
-updateProjectSet.solo --registry=$registry --projectSet=$projectSet \
+
+createProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
+  --from=$GSDEVKIT_STONES_ROOT/projectSets/$urlType/devkit.ston $*
+#
+# standard GsDevKit projects, plus:
+# ----- loaded into Pharo11
+# 	JadeiteForPharo:main								-- Pharo code base for JfP
+updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
+	--projectName=JadeiteForPharo --gitUrl=git@github.com:GemTalk/JadeiteForPharo.git \
+	--revision=main $*
+#		PharoGemStoneFFI:main								-- GemStone server login support
+updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
+	--projectName=PharoGemStoneFFI --gitUrl=git@github.com:GemTalk/PharoGemStoneFFI.git \
+	--revision=main $*
+#		RemoteServiceReplication:main				-- client/server object sharing
+updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
+	--projectName=RemoteServiceReplication --gitUrl=git@github.com:GemTalk/RemoteServiceReplication.git \
+	--revision=main $*
+# ----- loaded into GemStone 3.7.1 extent0.rowan3.dbf
+# 	Rowan:issue_917 										-- needed to do load GsDevKit projects (Rowan 3)
+updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
 	--projectName=Rowan --gitUrl=git@github.com:GemTalk/Rowan.git \
-	--revision=issue_917 $*
-# clone Sport:master ... not loaded in tODE, but will be loaded in Rowan extent
-updateProjectSet.solo --registry=$registry --projectSet=$projectSet \
-	--projectName=Sport --gitUrl=git@github.com:GsDevKit/Sport.git \
-	--revision=master $*
-updateProjectSet.solo --registry=$registry --projectSet=$projectSet \
+	--dirName=RowanV3 --revision=issue_917 $*
+#		Announcements:main									-- RemoteServiceReplication support
+updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
+	--projectName=Announcements --gitUrl=git@github.com:GemTalk/Announcements.git \
+	--revision=main $*
+#		FileSystemGs:gs-3.7.x								-- GemStone base support
+updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
+	--projectName=FileSystemGs --gitUrl=git@github.com:GemTalk/FileSystemGs.git \
+	--revision=gs-3.7.x $*
+#		RowanClientServices:ericV3.0_pharo	-- GemStone code base for JfP
+updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
+	--projectName=RowanClientServices --gitUrl=git@github.com:GemTalk/RowanClientServices.git \
+	--dirName=RowanClientServicesV3 --revision=ericV3.0_pharo $*
+#	----- GsDevKit projects with special version requirements
+#		glass:rowan4gsdevkit								-- modifications required to preserve Rowan 3 functionality
+updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
 	--projectName=glass --gitUrl=git@github.com:glassdb/glass.git \
 	--revision=rowan4gsdevkit $*
+#		Sport:master												-- provide Sport class definitions without cracking an .mcz file
+updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
+	--projectName=Sport --gitUrl=git@github.com:GsDevKit/Sport.git \
+	--revision=master $*
 
-registerProjectDirectory.solo --registry=$registry --projectDirectory=$STONES_HOME/$registry/$devKitProjectDir $*
+registerProjectDirectory.solo --registry=$registry --projectDirectory=$devKitHome $*
 
-# cloneProjectsFromProjectSet.solo will create the project directory if it does not already exist
-cloneProjectsFromProjectSet.solo --registry=$registry --projectSet=$projectSet $*
+# CLONE devkit projects into project directory ... these projects will be used to create the tODE stone
+cloneProjectsFromProjectSet.solo --registry=$registry --projectSet=$devKitProjectSet --update $*
 
 
 # create and register a product directory where GemStone product trees are kept.
@@ -103,7 +138,6 @@ registerTodeSharedDir.solo --registry=$registry \
                            --todeHome=$todeHome \
                            --populate $*
 
-
 # create tode stone
 template="default_tode"
 createStone.solo --force --registry=$registry --template=$template $todeStoneName $GS_VERS $*
@@ -123,10 +157,13 @@ gslist.solo -lc
 #
 cd $STONES_HOME/$registry/stones/$todeStoneName
 
-loadTode.stone --projectDirectory=$STONES_HOME/$registry/$devKitProjectDir $*
+loadTode.stone --projectDirectory=$devKitHome $*
 
 todeIt.stone -h
 todeIt.stone 'eval `3+4`' $*
+
+# CLONE/UPDATE rowan3 projects into project directory ... these projects will be used to create the rowan3 stone
+cloneProjectsFromProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet --update $*
 
 # generate the Rowan 3 project in the tODE stone directory
 export PATH=$scriptDir/../bin:$PATH
@@ -138,7 +175,7 @@ OLD_PATH=$PATH
 export GEMSTONE=`registryQuery.solo -r $registry --product=3.7.1`
 export PATH=$GEMSTONE/bin:$PATH
 generateProject.solo loadedPackages.ston --projectName=tode_rowan3 --componentName=Core \
-	--sportPackageDirPath=$STONES_HOME/$registry/$devKitProjectDir/Sport/src \
+	--sportPackageDirPath=$devKitHome/Sport/src \
 	--sportPackageName=Sport.v3 $*
 
 # revert to original path
@@ -152,11 +189,12 @@ unset GEMSTONE
 cd $STONES_HOME/$registry/stones/$rowan3StoneName
 ln -s $projectsHome .
 
-# until 3.7.2 ships, we need to use Rowan:issue_917 when doing the GsDevKit install
-devKitHome=`registryQuery.solo -r $registry --projectDirectory`
-installProject.stone file:$scriptDir/../specs/Rowan.ston --projectsHome=devKitHome --ignoreInvalidCategories --trace  $*
+# attach all of standard GemStone git projects in the image to the clones in $devKitHome
+attachRowanDevClones.stone --projectsHome=$devKitHome $*
 
+# make sure the image is in Legacy streams mode
 prepareSeasideExtent.topaz -lq
+# create classes and pool variables so that GsDevKit code will compile
 createSharedPools.stone $*
 
 #
@@ -183,6 +221,6 @@ fi
 
 snapshot.stone snapshots --extension="prepared_rowan3.dbf" $*
 
-installProject.stone file:projectsHome/tode_rowan3/rowan/specs/tode_rowan3.ston --projectsHome=projectsHome --ignoreInvalidCategories --noAutoInitialize --trace  $*
+installProject.stone file:$projectsHome/tode_rowan3/rowan/specs/tode_rowan3.ston --projectsHome=$projectsHome --ignoreInvalidCategories --noAutoInitialize --trace  $*
 
 snapshot.stone snapshots --extension="tode_rowan3.dbf" $*
