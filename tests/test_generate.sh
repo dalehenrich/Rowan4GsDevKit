@@ -57,6 +57,9 @@ updateProjectSet.solo --registry=$registry --projectSet=$projectSet \
 updateProjectSet.solo --registry=$registry --projectSet=$projectSet \
 	--projectName=Sport --gitUrl=git@github.com:GsDevKit/Sport.git \
 	--revision=master $*
+updateProjectSet.solo --registry=$registry --projectSet=$projectSet \
+	--projectName=glass --gitUrl=git@github.com:glassdb/glass.git \
+	--revision=rowan4gsdevkit $*
 
 registerProjectDirectory.solo --registry=$registry --projectDirectory=$STONES_HOME/$registry/$devKitProjectDir $*
 
