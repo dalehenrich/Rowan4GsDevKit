@@ -146,6 +146,10 @@ createStone.solo --force --registry=$registry --template=$template $todeStoneNam
 template="default_rowan3"
 createStone.solo --force --registry=$registry --template=$template $rowan3StoneName $GS_VERS $*
 
+pushd $STONES_HOME/$registry/stones/$rowan3StoneName
+	updateCustomEnv.solo --addKey=ROWAN_PROJECTS_HOME --value=$devKitHome $*
+popd
+
 #start stones
 startStone.solo --registry=$registry $todeStoneName -b $*
 startStone.solo --registry=$registry $rowan3StoneName -b $*
