@@ -70,10 +70,11 @@ updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
 	--projectName=RemoteServiceReplication --gitUrl=git@github.com:GemTalk/RemoteServiceReplication.git \
 	--revision=main $*
 # ----- loaded into GemStone 3.7.1 extent0.rowan3.dbf
-# 	Rowan:issue_917 										-- needed to do load GsDevKit projects (Rowan 3)
+# 	Rowan:issue_917 										-- bugfixes needed to load GsDevKit projects (Rowan 3)
+#		Rowan:rowan4gsdevkit								-- features needed to load GsDevKit projects
 updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
 	--projectName=Rowan --gitUrl=git@github.com:GemTalk/Rowan.git \
-	--dirName=RowanV3 --revision=issue_917 $*
+	--dirName=RowanV3 --revision=rowan4gsdevkit $*
 #		Announcements:main									-- RemoteServiceReplication support
 updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
 	--projectName=Announcements --gitUrl=git@github.com:GemTalk/Announcements.git \
@@ -83,9 +84,10 @@ updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
 	--projectName=FileSystemGs --gitUrl=git@github.com:GemTalk/FileSystemGs.git \
 	--revision=gs-3.7.x $*
 #		RowanClientServices:ericV3.0_pharo	-- GemStone code base for JfP
+#		RowanClientServices:rowan4gsdevkit	-- Rowan4GsDevKit specific changes
 updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
 	--projectName=RowanClientServices --gitUrl=git@github.com:GemTalk/RowanClientServices.git \
-	--dirName=RowanClientServicesV3 --revision=ericV3.0_pharo $*
+	--dirName=RowanClientServicesV3 --revision=rowan4gsdevkit $*
 #	----- GsDevKit projects with special version requirements
 #		glass:rowan4gsdevkit								-- modifications required to preserve Rowan 3 functionality
 updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
@@ -117,6 +119,9 @@ registerProductDirectory.solo --registry=$registry --productDirectory=$STONES_HO
 
 # update product list from shared product directory when a download is done by shared registry
 registerProduct.solo --registry=$registry --fromDirectory=$STONES_HOME/test_gemstone $*
+
+# create/update clientLibs directory for use by JadeiteForPharo
+updateClientLibs.solo -r $registry 3.7.1
 
 # create and register stones directory for test_rowanV3
 if [ ! -d $STONES_HOME/$registry/stones ]; then
