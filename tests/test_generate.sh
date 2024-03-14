@@ -69,7 +69,7 @@ updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
 updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
 	--projectName=RemoteServiceReplication --gitUrl=git@github.com:GemTalk/RemoteServiceReplication.git \
 	--revision=main $*
-# ----- loaded into GemStone 3.7.1 extent0.rowan3.dbf
+# ----- loaded into GemStone $GS_VERS extent0.rowan3.dbf
 # 	Rowan:issue_917 										-- bugfixes needed to load GsDevKit projects (Rowan 3)
 #		Rowan:rowan4gsdevkit								-- features needed to load GsDevKit projects
 updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
@@ -114,14 +114,14 @@ else
 fi
 registerProductDirectory.solo --registry=$registry --productDirectory=$STONES_HOME/test_gemstone $*
 
-# enable download when 3.7.1 ships
-# downloadGemStone.solo --registry=$registry 3.7.1 $GS_VERS $*
+# enable download when $GS_VERS ships
+downloadGemStone.solo --registry=$registry $GS_VERS $*
 
 # update product list from shared product directory when a download is done by shared registry
 registerProduct.solo --registry=$registry --fromDirectory=$STONES_HOME/test_gemstone $*
 
 # create/update clientLibs directory for use by JadeiteForPharo
-updateClientLibs.solo -r $registry 3.7.1
+updateClientLibs.solo -r $registry $GS_VERS
 
 # create and register stones directory for test_rowanV3
 if [ ! -d $STONES_HOME/$registry/stones ]; then
@@ -179,9 +179,9 @@ export PATH=$scriptDir/../bin:$PATH
 generatePackageList.topaz -lq
 repositorySummary.solo loadedPackages.ston $*
 
-# generateProject.solo needs to run with a rowan3 extent from 3.7.1
+# generateProject.solo needs to run with a rowan3 extent from $GS_VERS (3.7.1 or later)
 OLD_PATH=$PATH
-export GEMSTONE=`registryQuery.solo -r $registry --product=3.7.1`
+export GEMSTONE=`registryQuery.solo -r $registry --product=$GS_VERS`
 export PATH=$GEMSTONE/bin:$PATH
 generateProject.solo loadedPackages.ston --projectName=tode_rowan3 --componentName=Core \
 	--sportPackageDirPath=$devKitHome/Sport/src \
