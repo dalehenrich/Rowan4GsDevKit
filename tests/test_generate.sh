@@ -18,10 +18,18 @@ if [ "$CI" != "true" ]; then
 	fi
 fi
 
+# shared with managed script
 registry=test_Rowan4GsDevKit
 rowan3ProjectSet=rowan3
 devKitProjectSet=devkit
 todeHome="$STONES_HOME/$registry/tode"
+todeStoneName=tode_r4_$GS_VERS
+rowan3StoneName=rowan3_r4_$GS_VERS
+# unique in this script
+rowan3ProjectName=tode_rowan3
+# rowan4gsdevkit is standard; issue_917 is for dev
+rowanv3Branch=rowan4gsdevkit
+rowanv3Branch=issue_917
 
 export urlType=ssh
 if [ "$CI" = "true" ]; then
@@ -34,10 +42,8 @@ else
 fi
 
 # create a $GS_VERS stone
-export todeStoneName=tode_$GS_VERS
-export rowan3StoneName=rowan3_$GS_VERS
 scriptDir=`dirname "$0"`
-# projectsHome is where the tode_rowan3 is located
+# projectsHome is where the $rowan3ProjectName is located
 export projectsHome=$STONES_HOME/$registry/stones/$todeStoneName/projectsHome
 # devKitHome is where the github projects are cloned
 devKitHome=$STONES_HOME/$registry/devKit
@@ -70,11 +76,11 @@ updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
 	--projectName=RemoteServiceReplication --gitUrl=git@github.com:GemTalk/RemoteServiceReplication.git \
 	--revision=main $*
 # ----- loaded into GemStone $GS_VERS extent0.rowan3.dbf
-# 	Rowan:issue_917 										-- bugfixes needed to load GsDevKit projects (Rowan 3)
-#		Rowan:rowan4gsdevkit								-- features needed to load GsDevKit projects
+# 	Rowan:issue_917 										-- bugfixes needed to load GsDevKit projects	(Rowan 3 working branch)
+#		Rowan:rowan4gsdevkit								-- features needed to load GsDevKit projects	(Rowan 3 tested and ready for others)
 updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
 	--projectName=Rowan --gitUrl=git@github.com:GemTalk/Rowan.git \
-	--dirName=RowanV3 --revision=rowan4gsdevkit $*
+	--dirName=RowanV3 --revision=$rowanv3Branch $*
 #		Announcements:main									-- RemoteServiceReplication support
 updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
 	--projectName=Announcements --gitUrl=git@github.com:GemTalk/Announcements.git \
@@ -171,6 +177,15 @@ loadTode.stone --projectDirectory=$devKitHome $*
 todeIt.stone -h
 todeIt.stone 'eval `3+4`' $*
 
+# proper filetree install of Zinc and GsApplicationTools  
+#		at this point ...Zinc and GsApplicationTools are pure github: projects and need to be  filetree projects
+metacelloLoad.stone -D --project=ZincHTTPComponents --repoPath=repository --projectDirectory=/bosch1/users/dhenrich/_stones/tode/devkit/zinc
+# load AFTER zinc, because zinc requires github: variant of gsApplicationTools and incoming wins ... need filetree to win for generate step
+#
+metacelloLoad.stone -D --project=GsApplicationTools --repoPath=repository --projectDirectory=/bosch1/users/dhenrich/_stones/tode/devkit/gsApplicationTools
+
+snapshot.stone snapshots --extension=`date +%m-%d-%Y_%H:%M:%S`_generated_tode.dbf
+
 # CLONE/UPDATE rowan3 projects into project directory ... these projects will be used to create the rowan3 stone
 cloneProjectsFromProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet --update $*
 
@@ -183,7 +198,7 @@ repositorySummary.solo loadedPackages.ston $*
 OLD_PATH=$PATH
 export GEMSTONE=`registryQuery.solo -r $registry --product=$GS_VERS`
 export PATH=$GEMSTONE/bin:$PATH
-generateProject.solo loadedPackages.ston --projectName=tode_rowan3 --componentName=Core \
+generateProject.solo loadedPackages.ston --projectName=$rowan3ProjectName --componentName=Core \
 	--sportPackageDirPath=$devKitHome/Sport/src \
 	--sportPackageName=Sport.v3 $*
 
@@ -230,6 +245,6 @@ fi
 
 snapshot.stone snapshots --extension="prepared_rowan3.dbf" $*
 
-installProject.stone file:$projectsHome/tode_rowan3/rowan/specs/tode_rowan3.ston --projectsHome=$projectsHome --ignoreInvalidCategories --noAutoInitialize --trace  $*
+installProject.stone file:$projectsHome/$rowan3ProjectName/rowan/specs/$rowan3ProjectName.ston --projectsHome=$projectsHome --ignoreInvalidCategories --noAutoInitialize --trace  $*
 
-snapshot.stone snapshots --extension="tode_rowan3.dbf" $*
+snapshot.stone snapshots --extension="$rowan3ProjectName.dbf" $*
