@@ -227,7 +227,7 @@ createNeededClassesAndGlobals
 			MCAddition MCModification MCPackageLoader MCDependencySorter NameMatch STON051Reader STON051Writer MetacelloMCBaselineOfProjectSpec
 			MetacelloMCBaselineProject MetacelloSkipDirtyPackageLoad MetacelloIgnorePackageLoaded MetacelloSkipDirtyPackageLoad MetacelloMCConfigurationOfProjectSpec
 			ConnectionTimedOut UUIDGenerator MCVersionInfo MCDictionaryRepository ZipArchive SecureHashAlgorithm
-			MetacelloVersionNumber SocketStreamSocket 
+			MetacelloVersionNumber SocketStreamSocket MCFileTreeRepository
 	)
 		do: [:global |
 			UserGlobals at: global put: nil ].
