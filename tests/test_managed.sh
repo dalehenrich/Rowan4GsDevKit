@@ -49,58 +49,39 @@ fi
 # create a $GS_VERS stone
 scriptDir=`dirname "$0"`
 # projectsHome is where the tode_rowan3 is located
-export projectsHome=$STONES_HOME/$registry/stones/$todeStoneName/projectsHome
+projectsHome=$STONES_HOME/$registry/stones/$todeStoneName/projectsHome
 # devKitHome is where the github projects are cloned
 devKitHome=$STONES_HOME/$registry/devKit
 
-# BEGIN SKIPPED SECTION
-skip="true"
-skip="false"
-if [ "$skip" = "false" ]; then
 # ASSUME THAT test_generate.sh has already been run...
 
 #
-# install managed projects Zinc for now.
+# install managed projects into tode stone: Seaside.
 #
 cd $STONES_HOME/$registry/stones/$todeStoneName
 
-metacelloLoad.stone -D --project=ZincHTTPComponents --repoPath=repository --projectDirectory=/bosch1/users/dhenrich/_stones/tode/devkit/zinc
-# metacelloLoad.stone -D --project=Seaside3 --repoPath=repository --projectDirectory=/bosch1/users/dhenrich/_stones/tode/devkit/Seaside Welcome Development 'Zinc Project' Examples CI
+newExtent.solo -r $registry $todeStoneName -e snapshots/extent0.generated_tode.dbf  $*
 
-snapshot.stone snapshots --extension=`date +%m-%d-%Y_%H:%M:%S`_zinc_tode.dbf
+metacelloLoad.stone --project=Seaside3 --repoPath=repository --projectDirectory=$devKitHome/Seaside Welcome Development 'Zinc Project' Examples CI $*
 
-generateManagedPackageList.stone --loadedPackages=loadedPackages.ston --managedPackages=zincPackages.ston--projectName=$rowan3ProjectName $*
+snapshot.stone snapshots --extension=seaside_tode.dbf $*
 
-# examine managedPackages.ston ... should see zinc packages and ???
+generateManagedPackageList.stone --loadedPackages=loadedPackages.ston --managedPackages=seasidePackages.ston--projectName=$rowan3ProjectName $*
+
+ECHO "EARLY EXIT FOR DEGUGGING"
 exit 0
+
+# Prepare to install Managed packages into rowan3 stone
+
+cd $STONES_HOME/$registry/stones/$rowan3StoneName
+
+# Copy Rowan 3 extent from snapshot directory
+
+newExtent.solo -r $registry $rowan3StoneName -e snapshots/extent0.prepared_rowan3.dbf  $*
 
 #
 # install GsDevKit packages in Rowan 3 stone directory
 #
-
-cd $STONES_HOME/$registry/stones/$rowan3StoneName
-ln -s $projectsHome .
-
-#
-# end of the non-skip section
-#
-else	# ($skip = true)
-# start of skipped section
-
-cd $STONES_HOME/$registry/stones/$rowan3StoneName
-
-export PATH=$scriptDir/../bin:$PATH
-
-#
-# Copy Rowan 3 extent from snapshot directory
-#
-
-newExtent.solo -r $registry $rowan3StoneName -e snapshots/extent0.prepared_rowan3.dbf  $*
-
-fi
-# END SKIPPED SECTION
-
-snapshot.stone snapshots --extension="prepared_rowan3.dbf" $*
 
 installProject.stone file:$projectsHome/$rowan3ProjectName/rowan/specs/$rowan3ProjectName.ston --projectsHome=$projectsHome --ignoreInvalidCategories --noAutoInitialize --trace  $*
 
