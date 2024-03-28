@@ -195,16 +195,21 @@ generatePackageList.topaz -lq
 repositorySummary.solo loadedPackages.ston $*
 
 # generateProject.solo needs to run with a rowan3 extent from $GS_VERS (3.7.1 or later)
-OLD_PATH=$PATH
+OLD_PATH="$PATH"
+OLD_GEMSTONE="$GEMSTONE"
 export GEMSTONE=`registryQuery.solo -r $registry --product=$GS_VERS`
 export PATH=$GEMSTONE/bin:$PATH
 generateProject.solo loadedPackages.ston --projectName=$rowan3ProjectName --componentName=Core \
 	--sportPackageDirPath=$devKitHome/Sport/src \
 	--sportPackageName=Sport.v3 $*
 
-# revert to original path
-export PATH=$OLD_PATH
-unset GEMSTONE
+# revert to original path and gemstone
+export PATH="$OLD_PATH"
+if [ "$OLD_GEMSTONE"x = "x" ]; then
+	unset GEMSTONE
+else
+	export GEMSTONE="$OLD_GEMSTONE"
+fi
 
 #
 # install GsDevKit packages in Rowan 3 stone directory
