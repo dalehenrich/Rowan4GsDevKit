@@ -12,7 +12,7 @@
 #
 set -xe
 
-echo "***** test_generate.sh *****"
+echo "***** test_managed.sh *****"
 
 if [ ! -d $STONES_HOME/test_git ]; then
 	mkdir $STONES_HOME/test_git
@@ -62,7 +62,7 @@ cd $STONES_HOME/$registry/stones/$todeStoneName
 
 newExtent.solo -r $registry $todeStoneName -e snapshots/extent0.generated_tode.dbf  $*
 
-metacelloLoad.stone --project=Seaside3 --repoPath=repository --projectDirectory=$devKitHome/Seaside Welcome Development 'Zinc Project' Examples CI $*
+metacelloLoad.stone --onConflictUseLoaded --project=Seaside3 --repoPath=repository --projectDirectory=$devKitHome/Seaside Welcome Development Examples CI $*
 
 snapshot.stone snapshots --extension=seaside_tode.dbf $*
 
