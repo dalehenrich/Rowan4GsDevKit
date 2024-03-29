@@ -58,8 +58,8 @@ updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
 	--revision=master $*
 
 if [ -d "$STONES_HOME/devKit" ] ; then
-	if [ ! -d $devKitHome ] ; then
-		mkdir -p $devKitHome
+	if [ ! -d $registryHome ] ; then
+		mkdir $registryHome
 	fi
 	ln -s $STONES_HOME/devKit $devKitHome
 fi

@@ -10,7 +10,7 @@ set u DataCurator p swordfish
 login
 
 run
-	| topez result repositoryMap packageList skippedPackages |
+	| topez result repositoryMap packageList skippedPackages devKitHomePath gsApplicationToolsRoot |
    topez := (TDTopezServer for: 1000)
      displayOops: false;
      characterLimit: 160;
@@ -21,7 +21,13 @@ run
 	packageList := topez evaluateCommandStream: 'mc list' readStream.
 	repositoryMap := Dictionary new.
 	skippedPackages := Set new.
-
+	devKitHomePath := System gemEnvironmentVariable: 'devKitHome'.
+	devKitHomePath isEmpty
+		ifFalse: [
+			| gsApplicationToolsRef |
+			gsApplicationToolsRef := (devKitHomePath asFileReference / 'gsApplicationTools' / 'repository') asFileReference.
+			gsApplicationToolsRef exists
+				ifTrue: [ gsApplicationToolsRoot := gsApplicationToolsRef fullName ] ].
 	packageList do: [:mcWorkingCopy |
 		| packageName |
 		GsFile gciLogServer: mcWorkingCopy printString.
@@ -36,8 +42,16 @@ run
 					(repo versionWithInfo: mcWorkingCopy currentVersionInfo) notNil ]
 						ifNone: [])
 							ifNil: [ 
-								skippedPackages add: packageName.
-								GsFile stdout tab; nextPutAll: 'skipping package ', packageName printString, ' no file tree repo.'; lf. ]
+								(gsApplicationToolsRoot notNil and: [ packageName beginsWith: 'GsApplicationTools' ])
+									ifTrue: [ 
+										"have to force use of filetree"
+										(repositoryMap 
+											at: gsApplicationToolsRoot
+											ifAbsentPut: [Set new ]) add: packageName.
+										GsFile stdout tab; nextPutAll: 'gsApplicationTools package ', packageName printString, ' forcing repo directory to ', gsApplicationToolsRoot; lf	]
+									ifFalse: [ 
+										skippedPackages add: packageName.
+										GsFile stdout tab; nextPutAll: 'skipping package ', packageName printString, ' no file tree repo.'; lf ] ]
 							ifNotNil: [:repo |
 								(repositoryMap 
 									at: repo directory pathName

@@ -21,7 +21,8 @@ fi
 export registry=test_Rowan4GsDevKit
 export rowan3ProjectSet=rowan3
 export devKitProjectSet=devkit
-export todeHome="$STONES_HOME/$registry/tode"
+export registryHome=$STONES_HOME/$registry
+export todeHome="$registryHome/tode"
 export todeStoneName=tode_r4_$GS_VERS
 export rowan3StoneName=rowan3_r4_$GS_VERS
 
@@ -42,9 +43,9 @@ fi
 # create a $GS_VERS stone
 export scriptDir=`dirname "$0"`
 # projectsHome is where the $rowan3ProjectName is located
-export projectsHome=$STONES_HOME/$registry/stones/$todeStoneName/projectsHome
+export projectsHome=$registryHome/stones/$todeStoneName/projectsHome
 # devKitHome is where the github projects are cloned
-export devKitHome=$STONES_HOME/$registry/devKit
+export devKitHome=$registryHome/devKit
 
 # make the Rowan4GsDevKit/bin scripts available
 export PATH=$scriptDir/../bin:$PATH
@@ -59,7 +60,7 @@ $scriptDir/test_generate-prepare.sh $*
 # load any additional projects that you want to manage
 #
 
-cd $STONES_HOME/$registry/stones/$todeStoneName
+cd $registryHome/stones/$todeStoneName
 
 metacelloLoad.stone --project=ZincHTTPComponents --repoPath=repository --projectDirectory=$devKitHome/zinc $*
 
