@@ -42,4 +42,3 @@ newExtent.solo -r $registry $rowan3StoneName -e snapshots/extent0.prepared_rowan
 
 installProject.stone file:$projectsHome/$rowan3ProjectName/rowan/specs/$rowan3ProjectName.ston --projectsHome=$projectsHome --ignoreInvalidCategories --noAutoInitialize --trace  $*
 
-snapshot.stone snapshots --extension="$rowan3ProjectName.dbf" $*

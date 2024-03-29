@@ -106,14 +106,16 @@ generateManagedPackageList
 										ifAbsentPut: [Set new ]) add: packageName ] ] ].
 %
 doit
-self halt: 'not yet TESTED'.
 	self readMapFileFrom: self loadedPackages asFileReference.
 	self generateManagedPackageList.
 	self managedPackages asFileReference 
 		writeStreamDo: [:stream |
 			stream truncate.
-	  	STON 
-				put: { skippedPackages . repositoryMap }
-				onStream: stream ].
+			"in-line STON>>put:onStreamPretty:, so I can use lf instead of cr"
+			writer := STON writer on: stream.
+			writer 
+				newLine: Character lf asString;
+				prettyPrint: true;
+				nextPut: { managedSkippedPackages . managedRepositoryMap } ].
 	^ true
 %

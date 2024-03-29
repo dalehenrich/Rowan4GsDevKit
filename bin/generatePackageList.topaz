@@ -22,7 +22,8 @@ run
 	repositoryMap := Dictionary new.
 	skippedPackages := Set new.
 	devKitHomePath := System gemEnvironmentVariable: 'devKitHome'.
-	devKitHomePath isEmpty
+	devKitHomePath isNil
+		ifTrue: [ '' ]
 		ifFalse: [
 			| gsApplicationToolsRef |
 			gsApplicationToolsRef := (devKitHomePath asFileReference / 'gsApplicationTools' / 'repository') asFileReference.
@@ -58,9 +59,13 @@ run
 									ifAbsentPut: [Set new ]) add: packageName ] ].
 	'loadedPackages.ston' asFileReference 
 		writeStreamDo: [:stream |
+			| writer |
 			stream truncate.
-	  	STON 
-				put: { skippedPackages . repositoryMap }
-				onStream: stream ].
+			"in-line STON>>put:onStreamPretty:, so I can use lf instead of cr"
+			writer := STON writer on: stream.
+			writer 
+				newLine: Character lf asString;
+				prettyPrint: true;
+				nextPut: { skippedPackages . repositoryMap } ].
 %
 

@@ -138,5 +138,4 @@ todeIt.stone -h
 todeIt.stone 'eval `3+4`' $*
 
 
-snapshot.stone snapshots --extension=generated_tode.dbf
 

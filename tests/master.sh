@@ -53,6 +53,9 @@ export PATH=$scriptDir/../bin:$PATH
 # set up the _stones structure and create a standard tODE stone
 $scriptDir/test_generate-prepare.sh $*
 
+cd $STONES_HOME/$registry/stones/$todeStoneName
+snapshot.stone snapshots --extension=prepared_tode.dbf
+
 # load the managed projects at this point
 # proper filetree install of Zinc and GsApplicationTools  
 #		at this point ...Zinc and GsApplicationTools are pure github: projects and need to be  filetree projects
@@ -62,11 +65,15 @@ $scriptDir/test_generate-prepare.sh $*
 
 cd $registryHome/stones/$todeStoneName
 
+# load Seaside as the managed project
+metacelloLoad.stone --project=Seaside3 --repoPath=repository --projectDirectory=$devKitHome/Seaside Welcome Development Examples $*
+
 metacelloLoad.stone --project=ZincHTTPComponents --repoPath=repository --projectDirectory=$devKitHome/zinc $*
 
 # load AFTER zinc, because zinc requires github: variant of gsApplicationTools and incoming wins ... need filetree to win for generate step
-#
 metacelloLoad.stone --project=GsApplicationTools --repoPath=repository --projectDirectory=$devKitHome/gsApplicationTools $*
+
+snapshot.stone snapshots --extension=generated_tode.dbf
 
 # generate the base rowan project
 export rowan3ProjectName=tode_rowan3
@@ -76,3 +83,5 @@ $scriptDir/test_generate-generate.sh $*
 export rowan3ProjectName=managed_rowan3
 $scriptDir/test_managed-generate.sh $*
 
+cd $STONES_HOME/$registry/stones/$rowan3StoneName
+snapshot.stone snapshots --extension="$rowan3ProjectName.dbf" $*
