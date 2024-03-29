@@ -110,6 +110,7 @@ doit
 	self generateManagedPackageList.
 	self managedPackages asFileReference 
 		writeStreamDo: [:stream |
+			| writer |
 			stream truncate.
 			"in-line STON>>put:onStreamPretty:, so I can use lf instead of cr"
 			writer := STON writer on: stream.
