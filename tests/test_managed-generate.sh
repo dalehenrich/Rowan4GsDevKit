@@ -14,46 +14,7 @@ set -xe
 
 echo "***** test_managed.sh *****"
 
-if [ ! -d $STONES_HOME/test_git ]; then
-	mkdir $STONES_HOME/test_git
-else
-	rm -rf  $STONES_HOME/test_git/*
-fi
-
-if [ "$CI" != "true" ]; then
-	if [ "$GS_VERS"x = "x" ] ; then
-		export GS_VERS=3.7.1
-	fi
-fi
-
-# shared with generate script
-registry=test_Rowan4GsDevKit
-rowan3ProjectSet=rowan3
-devKitProjectSet=devkit
-todeHome="$STONES_HOME/$registry/tode"
-todeStoneName=tode_r4_$GS_VERS
-rowan3StoneName=rowan3_r4_$GS_VERS
-# unique in ths script
-rowan3ProjectName=managed_rowan3
-
-export urlType=ssh
-if [ "$CI" = "true" ]; then
-	# GSDEVKIT_STONES_ROOT defined in ci.yml
-	export urlType=https
-else
-	# GSDEVKIT_STONES_ROOT is $STONES_HOME/git ... the location that GsDevKit_stones 
-	#	was cloned when superDoit was installed
-	export GSDEVKIT_STONES_ROOT=$STONES_HOME/git/GsDevKit_stones
-fi
-
-# create a $GS_VERS stone
-scriptDir=`dirname "$0"`
-# projectsHome is where the tode_rowan3 is located
-projectsHome=$STONES_HOME/$registry/stones/$todeStoneName/projectsHome
-# devKitHome is where the github projects are cloned
-devKitHome=$STONES_HOME/$registry/devKit
-
-# ASSUME THAT test_generate.sh has already been run...
+# ASSUME THAT test_generate-prepare.sh and test_generate-generate.sh has already been run...
 
 #
 # install managed projects into tode stone: Seaside.
@@ -62,13 +23,9 @@ cd $STONES_HOME/$registry/stones/$todeStoneName
 
 newExtent.solo -r $registry $todeStoneName -e snapshots/extent0.generated_tode.dbf  $*
 
-metacelloLoad.stone --onConflictUseLoaded --project=Seaside3 --repoPath=repository --projectDirectory=$devKitHome/Seaside Welcome Development Examples CI $*
-
-snapshot.stone snapshots --extension=seaside_tode.dbf $*
-
 generateManagedPackageList.stone --loadedPackages=loadedPackages.ston --managedPackages=seasidePackages.ston--projectName=$rowan3ProjectName $*
 
-ECHO "EARLY EXIT FOR DEGUGGING"
+ECHO "**** EARLY EXIT BEFORE INSTALLING MANAGED PROJECTS FOR DEGUGGING ****"
 exit 0
 
 # Prepare to install Managed packages into rowan3 stone

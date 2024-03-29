@@ -106,6 +106,7 @@ generateManagedPackageList
 										ifAbsentPut: [Set new ]) add: packageName ] ] ].
 %
 doit
+self halt: 'not yet TESTED'.
 	self readMapFileFrom: self loadedPackages asFileReference.
 	self generateManagedPackageList.
 	self managedPackages asFileReference 
