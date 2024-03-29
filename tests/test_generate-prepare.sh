@@ -57,6 +57,13 @@ updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
 	--projectName=Sport --gitUrl=git@github.com:GsDevKit/Sport.git \
 	--revision=master $*
 
+if [ -d "$STONES_HOME/devKit" ] ; then
+	if [ ! -d $devKitHome ] ; then
+		mkdir -p $devKitHome
+	fi
+	ln -s $STONES_HOME/devKit $devKitHome
+fi
+
 registerProjectDirectory.solo --registry=$registry --projectDirectory=$devKitHome $*
 
 # CLONE devkit projects into project directory ... these projects will be used to create the tODE stone
