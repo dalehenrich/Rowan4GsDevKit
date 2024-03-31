@@ -50,3 +50,5 @@ snapshot.stone snapshots --extension="prepared_rowan3.dbf" $*
 installProject.stone file:$projectsHome/$rowan3ProjectName/rowan/specs/$rowan3ProjectName.ston --projectsHome=$projectsHome --ignoreInvalidCategories --noAutoInitialize --trace  $*
 
 snapshot.stone snapshots --extension="$rowan3ProjectName.dbf" $*
+
+echo "***** FINISHED -- test_generate-generate.sh *****"

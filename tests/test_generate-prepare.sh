@@ -138,4 +138,5 @@ todeIt.stone -h
 todeIt.stone 'eval `3+4`' $*
 
 
+echo "***** FINISHED - test_generate-prepare.sh *****"
 
