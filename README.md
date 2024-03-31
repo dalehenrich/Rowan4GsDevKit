@@ -7,4 +7,34 @@ Expect:
   2. $GEMSTONE/bin to be in PATH.
   3. Rowan4GsDevKit/bin to be in PATH
 
-The bash script tests/test_generate.sh contains the full sequence of operations needed to setup for using JadeiteForPharo to develop GsDevKit projects.
+The bash script tests/master_base_tode.sh creates:
+- A registry named test_Rowan4GsDevKit.
+- A tode_r4_3.7.1 stone with a standard tODE projects installed.
+- A devKit project directory with the standard GsDevKit projects including Rowan and JadeiteForPharo projects.
+- A project named base_tode_rowan3 which includes all of the packages used in the basic tODD stone. 
+- A stone name rowan3_r4_3.7.1 that has the base_tode_rowan3 project already preloaded.
+
+Here's an example bash session using tests/master_base_tode.sh:
+```
+rowan4gsdevkit_root=<path-to-Rowan4GsDevKit-project>
+
+$rowan4gsdevkit_root/tests/master_baseTode.sh
+
+# generate a Rowan 3 project for doing seaside development
+rowanProjectName=seaside_rowan3
+registryName=test_Rowan4GsDevKit
+projectsHome=`registryQuery.solo -r $registryName  --stonesDirectory`/tode_r4_3.7.1/projectsHome
+$rowan4gsdevkit_rootbin/generateProject.solo $rowan4gsdevkit_root/packageMaps/371/seaside.ston \
+                                             --projectName=$owanProjectName --componentName=Core \
+                                             --projectsHome=$projectsHome
+
+## UTILITY SCRIPTS
+
+# example that stops the stones 
+stopStone.solo -i -r test_Rowan4GsDevKit rowan3_r4_3.7.1 -b
+stopStone.solo -i -r test_Rowan4GsDevKit tode_r4_3.7.1 -b
+
+# example that starts the stones 
+startStone.solo -r test_Rowan4GsDevKit rowan3_r4_3.7.1 -b
+stopStone.solo -r test_Rowan4GsDevKit tode_r4_3.7.1 -b
+``
