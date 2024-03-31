@@ -32,6 +32,9 @@ EXAMPLES
   $basename -D
   $basename --debugGem
   $basename loadedPackages.ston
+  $basename loadedPackages.ston --projectName=base_tode_rowan3 --componentName=Core \
+	--sportPackageDirPath=/bosch1/users/dhenrich/_stones/test_Rowan4GsDevKit/devKit/Sport/src \
+	--sportPackageName=Sport.v3
 -----
 %
 instvars
