@@ -4,6 +4,7 @@
 #	into a Rowan 3 stone for editting
 #		
 set -xe
+echo "***** master_baseTode.sh *****"
 
 if [ ! -d $STONES_HOME/test_git ]; then
 	mkdir $STONES_HOME/test_git
@@ -28,6 +29,10 @@ export rowan3StoneName=rowan3_r4_$GS_VERS
 
 # rowan4gsdevkit is standard; issue_917 is for dev
 export rowanv3Branch=rowan4gsdevkit
+export rowanv3Branch=issue_917
+# b665ecdff2d46a21c4910934586784230eb922fa (HEAD of issue_917) -conflicts with BaselineOfSeaside3.package/BaselineOfSeaside3.class/properties.json (6 week ago)
+
+# 183ebcf5486d62d6acf864516a59f6e6c7bc2e9d / 508a850cdedc55a4df62cc0c003703b751979240 (reverted b665ecdff2d46a21c4910934586784230eb922fa)  - conflicts with 4-6 years ago
 export rowanv3Branch=issue_917
 
 export urlType=ssh
@@ -62,3 +67,5 @@ $scriptDir/test_generate-generate.sh $*
 
 cd $STONES_HOME/$registry/stones/$rowan3StoneName
 snapshot.stone snapshots --extension="$rowan3ProjectName.dbf" $*
+
+echo "***** FINISHED -- master_baseTode.sh *****"

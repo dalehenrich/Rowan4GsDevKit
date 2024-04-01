@@ -14,7 +14,9 @@ The bash script tests/master_base_tode.sh creates:
 - A project named base_tode_rowan3 which includes all of the packages used in the basic tODD stone. 
 - A stone name rowan3_r4_3.7.1 that has the base_tode_rowan3 project already preloaded.
 
-Here's an example bash session using tests/master_base_tode.sh:
+### Example #1: run tests/master_base_tode.sh and create a project using a pre-generated packageMap for Seaside
+
+Here's an example bash session using tests/master_base_tode.sh using a pre-generated Seaside package map ($rowan4gsdevkit_root/packageMaps/371/seaside.ston):
 ```
 rowan4gsdevkit_root=<path-to-Rowan4GsDevKit-project>
 
@@ -23,11 +25,18 @@ $rowan4gsdevkit_root/tests/master_baseTode.sh
 # generate a Rowan 3 project for doing seaside development
 rowanProjectName=seaside_rowan3
 registryName=test_Rowan4GsDevKit
-projectsHome=`registryQuery.solo -r $registryName  --stonesDirectory`/tode_r4_3.7.1/projectsHome
+stoneDirectory=`registryQuery.solo -r $registryName  --stonesDirectory`/tode_r4_3.7.1
+projectsHome=$stoneDirectory/tode_r4_3.7.1/projectsHome
 $rowan4gsdevkit_rootbin/generateProject.solo $rowan4gsdevkit_root/packageMaps/371/seaside.ston \
                                              --projectName=$owanProjectName --componentName=Core \
                                              --projectsHome=$projectsHome
+# install the seaside_rowan3 project into rowan3_r4_3.7.1 stone
+cd $stoneDirectory
+installProject.stone file:projectsHome/seaside_rowan3/rowan/specs/seaside_rowan3.ston --projectsHome=projectsHome --ignoreInvalidCategories --noAutoInitialize
+```
 
+
+```
 ## UTILITY SCRIPTS
 
 # example that stops the stones 

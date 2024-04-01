@@ -4,6 +4,7 @@
 #	into a Rowan 3 stone for editting
 #		
 set -xe
+echo "***** master_gsApplicationTools_seaside_zinc.sh *****"
 
 if [ ! -d $STONES_HOME/test_git ]; then
 	mkdir $STONES_HOME/test_git
@@ -85,3 +86,5 @@ $scriptDir/test_managed-generate.sh $*
 
 cd $STONES_HOME/$registry/stones/$rowan3StoneName
 snapshot.stone snapshots --extension="$rowan3ProjectName.dbf" $*
+
+echo "***** FINISHED -- master_gsApplicationTools_seaside_zinc.sh *****"
