@@ -53,7 +53,7 @@ updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
 # 	Rowan:issue_917 										-- bugfixes needed to load GsDevKit projects	(Rowan 3 working branch)
 #		Rowan:rowan4gsdevkit								-- features needed to load GsDevKit projects	(Rowan 3 tested and ready for others)
 updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
-	--projectName=Rowan --gitUrl= $RowanUrl \
+	--projectName=Rowan --gitUrl=$RowanUrl \
 	--dirName=RowanV3 --revision=$rowanv3Branch $*
 #		Announcements:main									-- RemoteServiceReplication support
 updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
