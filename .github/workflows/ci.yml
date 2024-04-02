@@ -45,12 +45,12 @@ jobs:
           export GSDEVKIT_STONES_ROOT=$GITHUB_WORKSPACE
           echo "GSDEVKIT_STONES_ROOT=$GITHUB_WORKSPACE" >> "$GITHUB_ENV"
           # exploring
-          MY_PWD=`pwd`
-          echo "pwd=$MY_PWD"
           echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
           ls $GITHUB_WORKSPACE
           echo "WORK_ROOT=$WORK_ROOT"
           ls $WORK_ROOT
+          cd $WORK_ROOT
+          ls
           # cloning
           exit 1
           # clones superDoit and installs 3.7.1 to be used for .solo scripts
