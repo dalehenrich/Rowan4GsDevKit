@@ -79,7 +79,6 @@ jobs:
 
           # configure shared memory on mac hosts
           $SUPERDOIT_ROOT/dev/setSharedMemory.sh
-        shell: bash
       - name: setup GsDevKit_stones
         run: |
           echo "CI=$CI"
@@ -141,7 +140,7 @@ jobs:
           echo "STONES_HOME=$STONES_HOME"
 
           $ROWAN4GSDEVKIT_ROOT/tests/master_baseTode.sh
-   slack-workflow-status:
+  slack-workflow-status:
     if: always()
     name: Post Workflow Status To Slack
     needs:
