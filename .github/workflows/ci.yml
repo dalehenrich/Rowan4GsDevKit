@@ -50,11 +50,10 @@ jobs:
           ls
           echo cloning
           git clone https://github.com/GsDevKit/GsDevKit_stones.git -b v2.1
-          export GSDEVKIT_STONES_ROOT=$GITHUB_WORKSPACE/GsDevKit_stones
-          echo "GSDEVKIT_STONES_ROOT=$GITHUB_WORKSPACE"
-          echo "GSDEVKIT_STONES_ROOT=$GITHUB_WORKSPACE" >> "$GITHUB_ENV"
-          ls
           export GSDEVKIT_STONES_ROOT=$WORK_ROOT/GsDevKit_stones
+          echo "GSDEVKIT_STONES_ROOT=$GSDEVKIT_STONES_ROOT"
+          echo "GSDEVKIT_STONES_ROOT=$GSDEVKIT_STONES_ROOT" >> "$GITHUB_ENV"
+          ls
           # clones superDoit and installs 3.7.1 to be used for .solo scripts
           $GSDEVKIT_STONES_ROOT/bin/install.sh $GS_VERS
 
@@ -104,6 +103,7 @@ jobs:
           echo "STONES_gemstone=$STONES_HOME/gemstone" >> "$GITHUB_ENV"
 
           export PATH=$SUPERDOIT_ROOT/bin:$GSDEVKIT_STONES_ROOT/bin:$PATH
+          echo "PATH=$SUPERDOIT_ROOT/bin:$GSDEVKIT_STONES_ROOT/bin:$PATH"
           echo "PATH=$SUPERDOIT_ROOT/bin:$GSDEVKIT_STONES_ROOT/bin:$PATH" >> "$GITHUB_ENV"
 
           echo "SUPERDOIT_ROOT/bin"
