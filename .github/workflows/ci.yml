@@ -40,16 +40,19 @@ jobs:
           export CI="true"
           echo "CI=$CI"
           echo "CI=true" >> "$GITHUB_ENV"
+          echo "GITHUB_WORKSPACE= $GITHUB_WORKSPACE"
           export WORK_ROOT="$GITHUB_WORKSPACE/.."
+          echo "WORK_ROOT=$WORK_ROOT"
           echo "WORK_ROOT=$GITHUB_WORKSPACE/.." >> "$GITHUB_ENV"
-          export GSDEVKIT_STONES_ROOT=$GITHUB_WORKSPACE
-          echo "GSDEVKIT_STONES_ROOT=$GITHUB_WORKSPACE" >> "$GITHUB_ENV"
           # exploring
           echo "WORK_ROOT=$WORK_ROOT"
           cd $WORK_ROOT
           ls
-          # cloning
+          echo cloning
           git clone https://github.com/GsDevKit/GsDevKit_stones.git -b v2.1
+          export GSDEVKIT_STONES_ROOT=$GITHUB_WORKSPACE/GsDevKit_stones
+          echo "GSDEVKIT_STONES_ROOT=$GITHUB_WORKSPACE"
+          echo "GSDEVKIT_STONES_ROOT=$GITHUB_WORKSPACE" >> "$GITHUB_ENV"
           ls
           export GSDEVKIT_STONES_ROOT=$WORK_ROOT/GsDevKit_stones
           # clones superDoit and installs 3.7.1 to be used for .solo scripts
@@ -74,7 +77,6 @@ jobs:
 
           # configure shared memory on mac hosts
           $SUPERDOIT_ROOT/dev/setSharedMemory.sh
-          exit 0
       - name: setup GsDevKit_stones
         run: |
           echo "CI=$CI"
