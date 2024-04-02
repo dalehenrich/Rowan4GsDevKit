@@ -4,7 +4,7 @@ on:
   push:
   pull_request:
   schedule:
-    - cron: "15 2 9 * *" #run job on the 23rd day of every month on the 15th minute of the 2nd hour
+    - cron: "15 2 8 * *" #run job on the 8th day of every month on the 15th minute of the 2nd hour
 
 jobs:
   build:
@@ -17,9 +17,11 @@ jobs:
           - smalltalk: 3.7.1
             os: ubuntu-22.04
           - smalltalk: 3.7.1
-            os: macos-11
+            os: macos-13
           - smalltalk: 3.7.1
             os: macos-12
+          - smalltalk: 3.7.1
+            os: macos-11
     runs-on: ${{ matrix.os }}
     env:
       GS_VERS: ${{ matrix.smalltalk }}
@@ -42,9 +44,9 @@ jobs:
           echo "WORK_ROOT=$GITHUB_WORKSPACE/.." >> "$GITHUB_ENV"
           export GSDEVKIT_STONES_ROOT=$GITHUB_WORKSPACE
           echo "GSDEVKIT_STONES_ROOT=$GITHUB_WORKSPACE" >> "$GITHUB_ENV"
-
-          # clones superDoit and installs 3.7.0 to be used for .solo scripts
-          $GSDEVKIT_STONES_ROOT/bin/install.sh
+          exit 1
+          # clones superDoit and installs 3.7.1 to be used for .solo scripts
+          $GSDEVKIT_STONES_ROOT/bin/install.sh $GS_VERS
 
           export SUPERDOIT_ROOT=$WORK_ROOT/superDoit
           echo "SUPERDOIT_ROOT=$WORK_ROOT/superDoit"
