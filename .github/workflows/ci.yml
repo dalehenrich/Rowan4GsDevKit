@@ -79,6 +79,7 @@ jobs:
 
           # configure shared memory on mac hosts
           $SUPERDOIT_ROOT/dev/setSharedMemory.sh
+        shell: bash
       - name: setup GsDevKit_stones
         run: |
           echo "CI=$CI"
@@ -128,6 +129,7 @@ jobs:
 
           echo "gslist.solo" 
           gslist.solo -l
+        shell: bash
       - name: run master_baseTode.sh
         run: |
           echo "CI=$CI"
@@ -140,7 +142,7 @@ jobs:
 
           $ROWAN4GSDEVKIT_ROOT/tests/master_baseTode.sh
 
-        shell: base
+        shell: bash
    slack-workflow-status:
     if: always()
     name: Post Workflow Status To Slack
