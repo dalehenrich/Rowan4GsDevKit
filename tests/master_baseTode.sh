@@ -35,13 +35,13 @@ export rowanv3Branch=issue_917
 # 183ebcf5486d62d6acf864516a59f6e6c7bc2e9d / 508a850cdedc55a4df62cc0c003703b751979240 (reverted b665ecdff2d46a21c4910934586784230eb922fa)  - conflicts with 4-6 years ago
 export rowanv3Branch=issue_917
 
-export urlType=ssh
 if [ "$CI" = "true" ]; then
-	# GSDEVKIT_STONES_ROOT defined in ci.yml
+	# GSDEVKIT_STONES_ROOT defined in ci.yml, must use https project urls
 	export urlType=https
 else
 	# GSDEVKIT_STONES_ROOT is $STONES_HOME/git ... the location that GsDevKit_stones 
-	#	was cloned when superDoit was installed
+	#	was cloned when superDoit was installed use ssh project urls
+	export urlType=ssh
 	export GSDEVKIT_STONES_ROOT=$STONES_HOME/git/GsDevKit_stones
 fi
 

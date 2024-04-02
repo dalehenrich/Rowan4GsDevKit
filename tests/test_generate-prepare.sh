@@ -15,46 +15,67 @@ createProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
   --from=$GSDEVKIT_STONES_ROOT/projectSets/$urlType/devkit.ston $*
 #
 # standard GsDevKit projects, plus:
-# ----- loaded into Pharo11
+# ----- loaded into Pharo 11
+if [ "$urlType" = "https" ]; then # use https urls
+	JadeiteForPharoUrl="https://github.com/GemTalk/JadeiteForPharo.git"
+	PharoGemStoneFFIUrl="https://github.com/GemTalk/PharoGemStoneFFI.git"
+	RemoteServiceReplicationUrl="https://github.com/GemTalk/RemoteServiceReplication.git"
+	RowanUrl="https://github.com/GemTalk/Rowan.git"
+	AnnouncementsUrl="https://github.com/GemTalk/Announcements.git"
+	FileSystemGsUrl="https://github.com/GemTalk/FileSystemGs.gi"
+	RowanClientServicesUrl="https://github.com/GemTalk/RowanClientServices.git"
+	GlassUrl="https://github.com/glassdb/glass.git"
+	SportUrl="https://github.com/GsDevKit/Sport.git"
+else # use ssh urls
+	JadeiteForPharoUrl="git@github.com:GemTalk/JadeiteForPharo.git"
+	PharoGemStoneFFIUrl="git@github.com:GemTalk/PharoGemStoneFFI.git"
+	RemoteServiceReplicationUrl="git@github.com:GemTalk/RemoteServiceReplication.git"
+	RowanUrl="git@github.com:GemTalk/Rowan.git"
+	AnnouncementsUrl="git@github.com:GemTalk/Announcements.git"
+	FileSystemGsUrl="git@github.com:GemTalk/FileSystemGs.git"
+	RowanClientServicesUrl="git@github.com:GemTalk/RowanClientServices.git"
+	GlassUrl="git@github.com:glassdb/glass.git"
+	SportUrl="git@github.com:GsDevKit/Sport.git"
+fi
 # 	JadeiteForPharo:main								-- Pharo code base for JfP
 updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
-	--projectName=JadeiteForPharo --gitUrl=git@github.com:GemTalk/JadeiteForPharo.git \
+	--projectName=JadeiteForPharo --gitUrl=$JadeiteForPharoUrl \
 	--revision=main $*
 #		PharoGemStoneFFI:main								-- GemStone server login support
 updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
-	--projectName=PharoGemStoneFFI --gitUrl=git@github.com:GemTalk/PharoGemStoneFFI.git \
+	--projectName=PharoGemStoneFFI --gitUrl=$PharoGemStoneFFIUrl\
 	--revision=main $*
 #		RemoteServiceReplication:main				-- client/server object sharing
 updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
-	--projectName=RemoteServiceReplication --gitUrl=git@github.com:GemTalk/RemoteServiceReplication.git \
+	--projectName=RemoteServiceReplication --gitUrl=$RemoteServiceReplicationUrl\
 	--revision=main $*
 # ----- loaded into GemStone $GS_VERS extent0.rowan3.dbf
 # 	Rowan:issue_917 										-- bugfixes needed to load GsDevKit projects	(Rowan 3 working branch)
 #		Rowan:rowan4gsdevkit								-- features needed to load GsDevKit projects	(Rowan 3 tested and ready for others)
 updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
-	--projectName=Rowan --gitUrl=git@github.com:GemTalk/Rowan.git \
+	--projectName=Rowan --gitUrl= $RowanUrl \
 	--dirName=RowanV3 --revision=$rowanv3Branch $*
 #		Announcements:main									-- RemoteServiceReplication support
 updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
-	--projectName=Announcements --gitUrl=git@github.com:GemTalk/Announcements.git \
+	--projectName=Announcements --gitUrl=$AnnouncementsUrl \
 	--revision=main $*
 #		FileSystemGs:gs-3.7.x								-- GemStone base support
 updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
-	--projectName=FileSystemGs --gitUrl=git@github.com:GemTalk/FileSystemGs.git \
+	--projectName=FileSystemGs --gitUrl=$FileSystemGsUrl \
 	--revision=gs-3.7.x $*
 #		RowanClientServices:ericV3.0_pharo	-- GemStone code base for JfP
 #		RowanClientServices:rowan4gsdevkit	-- Rowan4GsDevKit specific changes
 updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
-	--projectName=RowanClientServices --gitUrl=git@github.com:GemTalk/RowanClientServices.git \
+	--projectName=RowanClientServices --gitUrl=$RowanClientServicesUrl \
 	--dirName=RowanClientServicesV3 --revision=rowan4gsdevkit $*
 #	----- GsDevKit projects with special version requirements
 #		glass:rowan4gsdevkit								-- modifications required to preserve Rowan 3 functionality
 updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
-	--projectName=glass --gitUrl=git@github.com:glassdb/glass.git \
+	--projectName=glass --gitUrl=$GlassUrl \
 	--revision=rowan4gsdevkit $*
 #		Sport:master												-- provide Sport class definitions without cracking an .mcz file
 updateProjectSet.solo --registry=$registry --projectSet=$rowan3ProjectSet \
-	--projectName=Sport --gitUrl=git@github.com:GsDevKit/Sport.git \
+	--projectName=Sport --gitUrl=$SportUrl \
 	--revision=master $*
 
 if [ -d "$STONES_HOME/devKit" ] ; then
