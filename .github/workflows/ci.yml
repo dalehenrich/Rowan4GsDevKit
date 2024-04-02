@@ -128,8 +128,6 @@ jobs:
 
           echo "gslist.solo" 
           gslist.solo -l
-
-        shell: bash
       - name: run master_baseTode.sh
         run: |
           echo "CI=$CI"
@@ -141,6 +139,8 @@ jobs:
           echo "STONES_HOME=$STONES_HOME"
 
           $ROWAN4GSDEVKIT_ROOT/tests/master_baseTode.sh
+
+        shell: base
    slack-workflow-status:
     if: always()
     name: Post Workflow Status To Slack
