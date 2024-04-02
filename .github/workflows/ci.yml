@@ -28,7 +28,7 @@ jobs:
       PLATFORM: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v3
-      - name: install superDoit 
+      - name: install GsDevKit_stones and superDoit 
         run: |
           # required files and directories for GemStone
           sudo mkdir /opt/gemstone
@@ -45,14 +45,13 @@ jobs:
           export GSDEVKIT_STONES_ROOT=$GITHUB_WORKSPACE
           echo "GSDEVKIT_STONES_ROOT=$GITHUB_WORKSPACE" >> "$GITHUB_ENV"
           # exploring
-          echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
-          ls $GITHUB_WORKSPACE
           echo "WORK_ROOT=$WORK_ROOT"
-          ls $WORK_ROOT
           cd $WORK_ROOT
           ls
           # cloning
-          exit 1
+          git clone git@github.com:GsDevKit/GsDevKit_stones.git -b v2.1
+          ls
+          export GSDEVKIT_STONES_ROOT=$WORK_ROOT/GsDevKit_stones
           # clones superDoit and installs 3.7.1 to be used for .solo scripts
           $GSDEVKIT_STONES_ROOT/bin/install.sh $GS_VERS
 
@@ -75,7 +74,7 @@ jobs:
 
           # configure shared memory on mac hosts
           $SUPERDOIT_ROOT/dev/setSharedMemory.sh
-
+          exit 0
       - name: setup GsDevKit_stones
         run: |
           echo "CI=$CI"
