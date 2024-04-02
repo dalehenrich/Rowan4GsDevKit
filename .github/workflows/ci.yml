@@ -46,7 +46,7 @@ jobs:
           echo "GSDEVKIT_STONES_ROOT=$GITHUB_WORKSPACE" >> "$GITHUB_ENV"
           # exploring
           MY_PWD=`pwd`
-          echo "pwd=$MY_PWD`
+          echo "pwd=$MY_PWD"
           echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
           ls $GITHUB_WORKSPACE
           echo "WORK_ROOT=$WORK_ROOT"
