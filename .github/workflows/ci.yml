@@ -13,14 +13,14 @@ jobs:
       matrix:
         os: [ ubuntu-20.04 ]
         smalltalk: [ 3.7.1 ]
-        include:
-          - smalltalk: 3.7.1
-            os: ubuntu-22.04
-          - smalltalk: 3.7.1
-            os: macos-13
-          - smalltalk: 3.7.1
-            os: macos-12
-          - smalltalk: 3.7.1
+        #include:
+          #  - smalltalk: 3.7.1
+          #   os: ubuntu-22.04
+          # - smalltalk: 3.7.1
+          #   os: macos-13
+          #  - smalltalk: 3.7.1
+          #   os: macos-12
+          # - smalltalk: 3.7.1
             os: macos-11
     runs-on: ${{ matrix.os }}
     env:
@@ -44,6 +44,12 @@ jobs:
           echo "WORK_ROOT=$GITHUB_WORKSPACE/.." >> "$GITHUB_ENV"
           export GSDEVKIT_STONES_ROOT=$GITHUB_WORKSPACE
           echo "GSDEVKIT_STONES_ROOT=$GITHUB_WORKSPACE" >> "$GITHUB_ENV"
+          # exploring
+          echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
+          ls $GITHUB_WORKSPACE
+          echo "WORK_ROOT=$WORK_ROOT"
+          ls $WORK_ROOT
+
           exit 1
           # clones superDoit and installs 3.7.1 to be used for .solo scripts
           $GSDEVKIT_STONES_ROOT/bin/install.sh $GS_VERS
