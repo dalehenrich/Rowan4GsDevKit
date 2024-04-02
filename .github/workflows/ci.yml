@@ -141,8 +141,6 @@ jobs:
           echo "STONES_HOME=$STONES_HOME"
 
           $ROWAN4GSDEVKIT_ROOT/tests/master_baseTode.sh
-
-        shell: bash
    slack-workflow-status:
     if: always()
     name: Post Workflow Status To Slack
