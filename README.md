@@ -25,11 +25,12 @@ $rowan4gsdevkit_root/tests/master_baseTode.sh
 # generate a Rowan 3 project for doing seaside development
 rowanProjectName=seaside_rowan3
 registryName=test_Rowan4GsDevKit
+devkitHome=$STONES_HOME/test_Rowan4GsDevKit/devKit
 stoneDirectory=`registryQuery.solo -r $registryName  --stonesDirectory`
 projectsHome=$stoneDirectory/tode_r4_3.7.1/projectsHome
 $rowan4gsdevkit_rootbin/generateProject.solo $rowan4gsdevkit_root/packageMaps/371/seaside.ston \
                                              --projectName=$rowanProjectName --componentName=Core \
-                                             --projectsHome=$projectsHome
+                                             --projectsHome=$projectsHome --devkitHome=$devkitHome
 # install the seaside_rowan3 project into rowan3_r4_3.7.1 stone
 cd $stoneDirectory
 installProject.stone file:projectsHome/seaside_rowan3/rowan/specs/seaside_rowan3.ston --projectsHome=projectsHome --ignoreInvalidCategories --noAutoInitialize
