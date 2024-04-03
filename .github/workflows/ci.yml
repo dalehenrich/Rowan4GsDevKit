@@ -153,8 +153,12 @@ jobs:
           registryName=test_Rowan4GsDevKit
           stoneDirectory=`registryQuery.solo -r $registryName  --stonesDirectory`
           echo "stoneDirectory=$stoneDirectory"
+          echo "0"
+          ls -altr $stoneDirectory
           projectsHome=$stoneDirectory/tode_r4_$GS_VERS/projectsHome
-          echo "projectsHome=$projectsHome"
+          echo "A projectsHome=$projectsHome"
+          projectsHome=$stoneDirectory/rowan3_r4_$GS_VERS/projectsHome
+          echo "B projectsHome=$projectsHome"
           $ROWAN4GSDEVKIT_ROOT/bin/generateProject.solo $ROWAN4GSDEVKIT_ROOT/packageMaps/371/seaside.ston --projectName=$rowanProjectName --componentName=Core --projectsHome=$projectsHome
           # install the seaside_rowan3 project into rowan3_r4_3.7.1 stone
           cd $stoneDirectory/rowan3_r4_$GS_VERS
