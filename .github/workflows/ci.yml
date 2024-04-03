@@ -158,7 +158,16 @@ jobs:
           $ROWAN4GSDEVKIT_ROOT/bin/generateProject.solo $ROWAN4GSDEVKIT_ROOT/packageMaps/371/seaside.ston --projectName=$rowanProjectName --componentName=Core --projectsHome=$projectsHome
           # install the seaside_rowan3 project into rowan3_r4_3.7.1 stone
           cd $stoneDirectory/rowan3_r4_$GS_VERS
-          installProject.stone file:projectsHome/seaside_rowan3/rowan/specs/seaside_rowan3.ston --projectsHome=projectsHome --ignoreInvalidCategories --noAutoInitialize
+          echo "1"
+          ls -altr
+          echo "2"
+          ls -altr projectsHome/$rowanProjectName
+          echo "3"
+          ls -altr projectsHome/$rowanProjectName/rowan/specs
+          echo "4"
+          ls -altr projectsHome/$rowanProjectName/src
+          echo "5"
+          installProject.stone file:projectsHome/$rowanProjectName/rowan/specs/seaside_rowan3.ston --projectsHome=projectsHome --ignoreInvalidCategories --noAutoInitialize
   slack-workflow-status:
     if: always()
     name: Post Workflow Status To Slack
