@@ -1,7 +1,7 @@
 [
 	Set [ ],
 	{
-		'/bosch1/users/dhenrich/_stones/test_Rowan4GsDevKit/devKit/gsApplicationTools/repository' : Set [
+		'gsApplicationTools/repository' : Set [
 			'BaselineOfGsApplicationTools',
 			'GsApplicationTools-BreakpointV37',
 			'GsApplicationTools-Server',

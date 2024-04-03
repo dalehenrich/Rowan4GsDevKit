@@ -2,7 +2,7 @@
 	Set [ 
 	],
 	{
-		'/bosch1/users/dhenrich/_stones/test_Rowan4GsDevKit/devKit/Seaside/repository' : Set [
+		'Seaside/repository' : Set [
 			'Seaside-GemStone-Basic-Development',
 			'Seaside-GemStone-Continuation',
 			'Seaside-GemStone-REST-Core',
@@ -53,7 +53,7 @@
 			'Seaside-Tests-GemStone-Functional',
 			'Seaside-GemStone-Development'
 		],
-		'/bosch1/users/dhenrich/_stones/test_Rowan4GsDevKit/devKit/Grease/repository' : Set [
+		'Grease/repository' : Set [
 			'Grease-Tests-GemStone32-Core',
 			'Grease-Tests-Core'
 		]

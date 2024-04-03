@@ -6,7 +6,8 @@ SuperDoitOptionalOptionWithRequiredArg long: 'componentName' default: 'Core'.
 SuperDoitOptionalOptionWithRequiredArg long: 'skippedComponentName' default: 'Skip'.
 SuperDoitOptionalOptionWithRequiredArg long: 'packageFormat' default: 'filetree'.
 SuperDoitOptionalOptionWithRequiredArg long: 'packageConvention' default: 'Monticello'.
-SuperDoitOptionalOptionWithRequiredArg long: 'projectsHome' default: 'projectsHome'.
+SuperDoitRequiredOptionWithRequiredArg long: 'projectsHome'.
+SuperDoitRequiredOptionWithRequiredArg long: 'devkitHome'.
 SuperDoitOptionalOptionWithRequiredArg long: 'repositoryType' default: 'git'.
 SuperDoitOptionalOptionWithRequiredArg long: 'sportPackageDirPath'.
 SuperDoitOptionalOptionWithRequiredArg long: 'sportPackageName'.
@@ -97,7 +98,7 @@ skippedPackageNames
 	}
 %
 doit
-	| definedProject resolvedProject packagesRoot skippedPackageNames |
+	| definedProject resolvedProject packagesRoot skippedPackageNames devkitHomeRef |
 	self readMapFileFrom: self positionalArgs first.
 	definedProject := (Rowan newProjectNamed: self projectName).
 	definedProject
@@ -131,9 +132,10 @@ doit
 	resolvedProject := definedProject resolveProject.
 	resolvedProject write.
 	packagesRoot := resolvedProject packagesRoot.
-	repositoryMap keysAndValuesDo: [ :packageDirPath :packageNames |
+	devkitHomeRef := self devkitHome asFileReference.
+	repositoryMap keysAndValuesDo: [ :relativePackageDirPath :packageNames |
 		| targetPackagesRoot |
-		targetPackagesRoot := packageDirPath asFileReference.
+		targetPackagesRoot := devkitHomeRef resolve: relativePackageDirPath.
 		packageNames
 			do: [:packageName |
 				| packageDir |

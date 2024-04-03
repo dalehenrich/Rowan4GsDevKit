@@ -24,11 +24,11 @@
 		'ConfigurationOfGsSqueakCommon'
 	],
 	{
-		'/bosch1/users/dhenrich/_stones/test_Rowan4GsDevKit/devKit/rb/repository' : Set [
+		'rb/repository' : Set [
 			'AST-Core',
 			'BaselineOfRB'
 		],
-		'/bosch1/users/dhenrich/_stones/test_Rowan4GsDevKit/devKit/Grease/repository' : Set [
+		'Grease/repository' : Set [
 			'BaselineOfGrease',
 			'Grease-GemStone-Kernelv370',
 			'Grease-Tests-GemStone32-Core',
@@ -38,13 +38,13 @@
 			'Grease-Core',
 			'Grease-Tests-Core'
 		],
-		'/bosch1/users/dhenrich/_stones/test_Rowan4GsDevKit/devKit/gsApplicationTools/repository' : Set [
+		'gsApplicationTools/repository' : Set [
 			'BaselineOfGsApplicationTools',
 			'GsApplicationTools-BreakpointV37',
 			'GsApplicationTools-Server',
 			'GsApplicationTools-ServerV30'
 		],
-		'/bosch1/users/dhenrich/_stones/test_Rowan4GsDevKit/devKit/metacello-work/repository' : Set [
+		'metacello-work/repository' : Set [
 			'Metacello-Base',
 			'Metacello-Platform.gemstone',
 			'Metacello-ToolBox',
@@ -58,7 +58,7 @@
 			'Metacello-FileTree',
 			'Metacello-GitHub'
 		],
-		'/bosch1/users/dhenrich/_stones/test_Rowan4GsDevKit/devKit/glass/repository' : Set [
+		'glass/repository' : Set [
 			'GsSqueakCommon-Tests',
 			'GemStone-Compression',
 			'GemStone-Indexing-Extensions.v34',
@@ -96,13 +96,13 @@
 			'GemStone-Release-Support',
 			'Base-Bootstrap.v36'
 		],
-		'/bosch1/users/dhenrich/_stones/test_Rowan4GsDevKit/devKit/ston/repository' : Set [
+		'ston/repository' : Set [
 			'STON-Core',
 			'BaselineOfSton',
 			'STON-GemStone-Core',
 			'STON-UTF8-Core'
 		],
-		'/bosch1/users/dhenrich/_stones/test_Rowan4GsDevKit/devKit/tode/repository' : Set [
+		'tode/repository' : Set [
 			'Tode-AST-Extensions',
 			'Topez-Server-TestDebugTools.v37',
 			'Tode-GemStone-Server-Core',
@@ -132,7 +132,7 @@
 			'Topez-Server-3x-Core',
 			'Topez-Server-33x-Core'
 		],
-		'/bosch1/users/dhenrich/_stones/test_Rowan4GsDevKit/devKit/Seaside/repository' : Set [
+		'Seaside/repository' : Set [
 			'Seaside-GemStone-Basic-Development',
 			'Seaside-GemStone-Continuation',
 			'Seaside-GemStone-REST-Core',
@@ -183,7 +183,7 @@
 			'Seaside-Tests-GemStone-Functional',
 			'Seaside-GemStone-Development'
 		],
-		'/bosch1/users/dhenrich/_stones/test_Rowan4GsDevKit/devKit/zinc/repository' : Set [
+		'zinc/repository' : Set [
 			'Zinc-Character-Encoding-GS32-Core.v37',
 			'Zinc-Character-Encoding-Core.v37',
 			'Zinc-HTTP',
@@ -194,7 +194,7 @@
 			'SocketStream',
 			'Zinc-FileSystem-Legacy'
 		],
-		'/bosch1/users/dhenrich/_stones/test_Rowan4GsDevKit/devKit/zodiac/repository' : Set [
+		'zodiac/repository' : Set [
 			'Zodiac-GemStone-Core',
 			'BaselineOfZodiac',
 			'Zodiac-Core'

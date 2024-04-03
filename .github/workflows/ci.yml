@@ -13,15 +13,15 @@ jobs:
       matrix:
         os: [ ubuntu-20.04 ]
         smalltalk: [ 3.7.1 ]
-        include:
-          - smalltalk: 3.7.1
-            os: ubuntu-22.04
-          - smalltalk: 3.7.1
-            os: macos-13
-          - smalltalk: 3.7.1
-            os: macos-12
-          - smalltalk: 3.7.1
-            os: macos-11
+#        include:
+#          - smalltalk: 3.7.1
+#            os: ubuntu-22.04
+#          - smalltalk: 3.7.1
+#            os: macos-13
+#          - smalltalk: 3.7.1
+#            os: macos-12
+#          - smalltalk: 3.7.1
+#            os: macos-11
     runs-on: ${{ matrix.os }}
     env:
       GS_VERS: ${{ matrix.smalltalk }}
@@ -159,7 +159,9 @@ jobs:
           echo "A projectsHome=$projectsHome"
           projectsHome=$stoneDirectory/rowan3_r4_$GS_VERS/projectsHome
           echo "B projectsHome=$projectsHome"
-          $ROWAN4GSDEVKIT_ROOT/bin/generateProject.solo $ROWAN4GSDEVKIT_ROOT/packageMaps/371/seaside.ston --projectName=$rowanProjectName --componentName=Core --projectsHome=$projectsHome
+          $ROWAN4GSDEVKIT_ROOT/bin/generateProject.solo $ROWAN4GSDEVKIT_ROOT/packageMaps/371/seaside.ston \
+              --projectName=$rowanProjectName --componentName=Core --projectsHome=$projectsHome \
+              --devkitHome=$devKitHome
           # install the seaside_rowan3 project into rowan3_r4_3.7.1 stone
           cd $stoneDirectory/rowan3_r4_$GS_VERS
           echo "1"

@@ -1,7 +1,7 @@
 [
 	Set [ ],
 	{
-		'/bosch1/users/dhenrich/_stones/test_Rowan4GsDevKit/devKit/zinc/repository' : Set [
+		'zinc/repository' : Set [
 			'Zinc-Character-Encoding-GS32-Core.v37',
 			'Zinc-Character-Encoding-Core.v37',
 			'Zinc-HTTP',
@@ -12,7 +12,7 @@
 			'SocketStream',
 			'Zinc-FileSystem-Legacy'
 		],
-		'/bosch1/users/dhenrich/_stones/test_Rowan4GsDevKit/devKit/zodiac/repository' : Set [
+		'zodiac/repository' : Set [
 			'Zodiac-GemStone-Core',
 			'BaselineOfZodiac',
 			'Zodiac-Core'
