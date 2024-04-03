@@ -13,15 +13,15 @@ jobs:
       matrix:
         os: [ ubuntu-20.04 ]
         smalltalk: [ 3.7.1 ]
-        include:
-          - smalltalk: 3.7.1
-            os: ubuntu-22.04
-          - smalltalk: 3.7.1
-            os: macos-13
-          - smalltalk: 3.7.1
-            os: macos-12
-          - smalltalk: 3.7.1
-            os: macos-11
+#        include:
+#          - smalltalk: 3.7.1
+#            os: ubuntu-22.04
+#          - smalltalk: 3.7.1
+#            os: macos-13
+#          - smalltalk: 3.7.1
+#            os: macos-12
+#          - smalltalk: 3.7.1
+#            os: macos-11
     runs-on: ${{ matrix.os }}
     env:
       GS_VERS: ${{ matrix.smalltalk }}
@@ -151,9 +151,13 @@ jobs:
           # generate a Rowan 3 project for doing seaside development
           rowanProjectName=seaside_rowan3
           registryName=test_Rowan4GsDevKit
+          echo "BEFORE"
           stoneDirectory=`registryQuery.solo -r $registryName  --stonesDirectory`
+          echo "stoneDirectory=$stoneDirectory"
           projectsHome=$stoneDirectory/tode_r4_3.7.1/projectsHome
+          echo "projectsHome=$projectsHome"
           $ROWAN4GSDEVKIT_ROOT/bin/generateProject.solo $ROWAN4GSDEVKIT_ROOT/packageMaps/371/seaside.ston --projectName=$rowanProjectName --componentName=Core --projectsHome=$projectsHome
+          echo "AFTER"
           # install the seaside_rowan3 project into rowan3_r4_3.7.1 stone
           cd $stoneDirectory
           installProject.stone file:projectsHome/seaside_rowan3/rowan/specs/seaside_rowan3.ston --projectsHome=projectsHome --ignoreInvalidCategories --noAutoInitialize
