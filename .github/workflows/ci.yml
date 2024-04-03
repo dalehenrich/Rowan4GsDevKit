@@ -128,7 +128,6 @@ jobs:
 
           echo "gslist.solo" 
           gslist.solo -l
-        shell: bash
       - name: run master_baseTode.sh
         run: |
           echo "CI=$CI"
@@ -138,8 +137,26 @@ jobs:
           echo "WORK_ROOT=$WORK_ROOT"          
           echo "STONES_DATA_HOME=$STONES_DATA_HOME"
           echo "STONES_HOME=$STONES_HOME"
-
           $ROWAN4GSDEVKIT_ROOT/tests/master_baseTode.sh
+        shell: bash
+      - name: generate a Rowan 3 project for doing seaside development (from README)
+        run: |
+          echo "CI=$CI"
+          echo "SUPERDOIT_ROOT=$SUPERDOIT_ROOT"
+          echo "GSDEVKIT_STONES_ROOT=$GSDEVKIT_STONES_ROOT"
+          echo "GITHUB_WORKSPACE=$GITHUB_WORKSPACE"
+          echo "WORK_ROOT=$WORK_ROOT"
+          echo "STONES_DATA_HOME=$STONES_DATA_HOME"
+          echo "STONES_HOME=$STONES_HOME"
+          # generate a Rowan 3 project for doing seaside development
+          rowanProjectName=seaside_rowan3
+          registryName=test_Rowan4GsDevKit
+          stoneDirectory=`registryQuery.solo -r $registryName  --stonesDirectory`
+          projectsHome=$stoneDirectory/tode_r4_3.7.1/projectsHome
+          $ROWAN4GSDEVKIT_ROOT/bin/generateProject.solo $ROWAN4GSDEVKIT_ROOT/packageMaps/371/seaside.ston --projectName=$rowanProjectName --componentName=Core --projectsHome=$projectsHome
+          # install the seaside_rowan3 project into rowan3_r4_3.7.1 stone
+          cd $stoneDirectory
+          installProject.stone file:projectsHome/seaside_rowan3/rowan/specs/seaside_rowan3.ston --projectsHome=projectsHome --ignoreInvalidCategories --noAutoInitialize
   slack-workflow-status:
     if: always()
     name: Post Workflow Status To Slack
