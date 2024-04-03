@@ -137,6 +137,14 @@ jobs:
           echo "WORK_ROOT=$WORK_ROOT"          
           echo "STONES_DATA_HOME=$STONES_DATA_HOME"
           echo "STONES_HOME=$STONES_HOME"
+
+          export registryHome=$STONES_HOME/test_Rowan4GsDevKit
+          echo "registryHome=$STONES_HOME/test_Rowan4GsDevKit"
+          echo "registryHome=$STONES_HOME/test_Rowan4GsDevKit" >> "$GITHUB_ENV"
+          export devkitHome=$registryHome/devKit
+          echo "devKitHome=$registryHome/devKit"
+          echo "devKitHome=$registryHome/devKit" >> "$GITHUB_ENV"
+
           $ROWAN4GSDEVKIT_ROOT/tests/master_baseTode.sh
         shell: bash
       - name: generate a Rowan 3 project for doing seaside development (from README)
@@ -148,31 +156,29 @@ jobs:
           echo "WORK_ROOT=$WORK_ROOT"
           echo "STONES_DATA_HOME=$STONES_DATA_HOME"
           echo "STONES_HOME=$STONES_HOME"
-          # generate a Rowan 3 project for doing seaside development
-          rowanProjectName=seaside_rowan3
+          echo "registryHome=$registryHome"
+          echo "devKitHome=$devKitHome"
+
+          echo "devKitHome contents"
+          ls -altr $devKitHome
+
           registryName=test_Rowan4GsDevKit
           stoneDirectory=`registryQuery.solo -r $registryName  --stonesDirectory`
           echo "stoneDirectory=$stoneDirectory"
-          echo "0"
+
+          echo "stoneDirectory contents"
           ls -altr $stoneDirectory
-          projectsHome=$stoneDirectory/tode_r4_$GS_VERS/projectsHome
-          echo "A projectsHome=$projectsHome"
+
           projectsHome=$stoneDirectory/rowan3_r4_$GS_VERS/projectsHome
-          echo "B projectsHome=$projectsHome"
+          echo "projectsHome=$projectsHome"
+
+          # generate a Rowan 3 project for doing seaside development
+          rowanProjectName=seaside_rowan3
           $ROWAN4GSDEVKIT_ROOT/bin/generateProject.solo $ROWAN4GSDEVKIT_ROOT/packageMaps/371/seaside.ston \
               --projectName=$rowanProjectName --componentName=Core --projectsHome=$projectsHome \
               --devkitHome=$devKitHome
           # install the seaside_rowan3 project into rowan3_r4_3.7.1 stone
           cd $stoneDirectory/rowan3_r4_$GS_VERS
-          echo "1"
-          ls -altr
-          echo "2"
-          ls -altr projectsHome/$rowanProjectName
-          echo "3"
-          ls -altr projectsHome/$rowanProjectName/rowan/specs
-          echo "4"
-          ls -altr projectsHome/$rowanProjectName/src
-          echo "5"
           installProject.stone file:projectsHome/$rowanProjectName/rowan/specs/seaside_rowan3.ston --projectsHome=projectsHome --ignoreInvalidCategories --noAutoInitialize
   slack-workflow-status:
     if: always()
