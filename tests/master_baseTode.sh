@@ -27,9 +27,16 @@ export todeHome="$registryHome/tode"
 export todeStoneName=tode_r4_$GS_VERS
 export rowan3StoneName=rowan3_r4_$GS_VERS
 
-# rowan4gsdevkit is standard; issue_917 is for dev
-export rowanv3Branch=rowan4gsdevkit
-export rowanv3Branch=issue_917
+# rowan4gsdevkit is used for pre-3.7.5 images; masterV3.5 is for 3.7.5...
+case $GS_VERS in
+	3.7.5 )
+		export rowanv3Branch=masterV3.5
+		;;
+	*) 
+		export rowanv3Branch=rowan4gsdevkit
+		;;
+esac
+
 # b665ecdff2d46a21c4910934586784230eb922fa (HEAD of issue_917) -conflicts with BaselineOfSeaside3.package/BaselineOfSeaside3.class/properties.json (6 week ago)
 
 # 183ebcf5486d62d6acf864516a59f6e6c7bc2e9d / 508a850cdedc55a4df62cc0c003703b751979240 (reverted b665ecdff2d46a21c4910934586784230eb922fa)  - conflicts with 4-6 years ago
