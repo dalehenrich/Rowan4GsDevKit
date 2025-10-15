@@ -1,5 +1,6 @@
-# Rowan4GsDevKit
+# The Rowan4GsDevKit project is superceded by [RowanStubForJadeite](https://github.com/GemTalk/RowanStubForJadeite) and [Rowancello](https://github.com/GsDevKit/Rowancello)
 Project intended to permit the use of Rowan3 and Jadite4Pharo to edit GsDevKit source code 
+
 
 Expect:
   1. [GsDevKit_stones](https://github.com/GsDevKit/GsDevKit_stones) to be installed, using branch v2.1.
