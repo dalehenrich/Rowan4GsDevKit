@@ -32,8 +32,17 @@ case $GS_VERS in
 	3.7.5 )
 		export rowanv3Branch=masterV3.5
 		;;
+	3.7.4.1 )
+		export rowanv3Branch=masterV3.4
+		;;
+	3.7.2 )
+		export rowanv3Branch=masterV3.2
+		;;
+	3.7.1 )
+		export rowanv3Branch=masterV3.1
+		;;
 	*) 
-		export rowanv3Branch=rowan4gsdevkit
+		echo "Unsupported GemStone version: $GSVERS"
 		;;
 esac
 
